@@ -6,7 +6,7 @@ function getApiBase(): string {
       return '/api/v1'
     }
   }
-  return process.env.NEXT_PUBLIC_API_URL ?? '/api/v1'
+  return process.env.NEXT_PUBLIC_API_URL ?? 'https://pairlog-api.rintaro4869.workers.dev/api/v1'
 }
 
 function getToken(): string | null {
