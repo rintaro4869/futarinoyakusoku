@@ -1,0 +1,13 @@
+name = "futari-no-yakusoku"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "out"
+
+# Cloudflare Pages: Free tier
+# Limits: 500 builds/month, unlimited bandwidth
+
+# ビルドコマンド (Cloudflare Pages ダッシュボードでも設定可)
+# Build command: CF_PAGES=1 next build
+# Build output directory: out
+# Root directory: apps/web
+# Environment variables (Production):
+#   NEXT_PUBLIC_API_URL = https://futari-no-yakusoku-api.workers.dev/api/v1

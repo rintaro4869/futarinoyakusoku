@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id
+  locale    String    @default("ja-JP")
+  timezone  String    @default("Asia/Tokyo")
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  memberships   Membership[]
+  reportedEvents RuleEvent[] @relation("reporter")
+  targetedEvents RuleEvent[] @relation("target")
+  approvedEvents RuleEvent[] @relation("approver")
+  rejectedEvents RuleEvent[] @relation("rejector")
+  pointLedger   PointLedger[]
+  repairActions RepairAction[]
+  safetyActions SafetyAction[]
+  analyticsEvents AnalyticsEvent[]
+  inviteCodes   InviteCode[]
+
+  @@map("users")
+}
+
+model Couple {
+  id        String    @id
+  status    String
+  createdAt DateTime  @default(now()) @map("created_at")
+  closedAt  DateTime? @map("closed_at")
+
+  memberships   Membership[]
+  rules         Rule[]
+  ruleEvents    RuleEvent[]
+  pointLedger   PointLedger[]
+  repairActions RepairAction[]
+  safetyActions SafetyAction[]
+  analyticsEvents AnalyticsEvent[]
+  inviteCodes   InviteCode[]
+
+  @@map("couples")
+}
+
+model Membership {
+  coupleId    String    @map("couple_id")
+  userId      String    @map("user_id")
+  displayName String    @map("display_name")
+  role        String
+  joinedAt    DateTime  @default(now()) @map("joined_at")
+  leftAt      DateTime? @map("left_at")
+
+  couple Couple @relation(fields: [coupleId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([coupleId, userId])
+  @@map("memberships")
+}
+
+model InviteCode {
+  code      String    @id
+  coupleId  String    @map("couple_id")
+  createdBy String    @map("created_by")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+
+  couple  Couple @relation(fields: [coupleId], references: [id])
+  creator User   @relation(fields: [createdBy], references: [id])
+
+  @@map("invite_codes")
+}
+
+model Rule {
+  id                  String    @id
+  coupleId            String    @map("couple_id")
+  title               String
+  objective           String?
+  mode                String    @default("routine")
+  pointValue          Int       @map("point_value")
+  threshold           Int
+  thankYouThreshold   Int       @default(5)  @map("thank_you_threshold")
+  nobishiroThreshold  Int       @default(3)  @map("nobishiro_threshold")
+  active              Boolean   @default(true)
+  createdAt           DateTime  @default(now()) @map("created_at")
+  archivedAt          DateTime? @map("archived_at")
+
+  couple Couple      @relation(fields: [coupleId], references: [id])
+  events RuleEvent[]
+
+  @@map("rules")
+}
+
+model RuleEvent {
+  id             String      @id
+  ruleId         String      @map("rule_id")
+  coupleId       String      @map("couple_id")
+  reporterUserId String      @map("reporter_user_id")
+  targetUserId   String      @map("target_user_id")
+  reportType     String      @map("report_type")
+  note           String?
+  status         String      @default("pending")
+  expiresAt      DateTime    @map("expires_at")
+  approvedBy     String?     @map("approved_by")
+  approvedAt     DateTime?   @map("approved_at")
+  rejectedBy     String?     @map("rejected_by")
+  rejectedAt     DateTime?   @map("rejected_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  rule     Rule   @relation(fields: [ruleId], references: [id])
+  couple   Couple @relation(fields: [coupleId], references: [id])
+  reporter User   @relation("reporter", fields: [reporterUserId], references: [id])
+  target   User   @relation("target", fields: [targetUserId], references: [id])
+  approver User?  @relation("approver", fields: [approvedBy], references: [id])
+  rejector User?  @relation("rejector", fields: [rejectedBy], references: [id])
+
+  pointLedger   PointLedger?
+  repairActions RepairAction[]
+
+  @@map("rule_events")
+}
+
+model PointLedger {
+  id            String   @id
+  coupleId      String   @map("couple_id")
+  userId        String   @map("user_id")
+  sourceEventId String   @unique @map("source_event_id")
+  points        Int
+  pointKind     String?  @map("point_kind")
+  weekKey       String   @map("week_key")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  couple      Couple    @relation(fields: [coupleId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+  sourceEvent RuleEvent @relation(fields: [sourceEventId], references: [id])
+
+  @@map("point_ledger")
+}
+
+model RepairTemplate {
+  id          String  @id
+  category    String
+  label       String
+  description String
+  active      Boolean @default(true)
+
+  repairActions RepairAction[]
+
+  @@map("repair_templates")
+}
+
+model RepairAction {
+  id              String       @id
+  coupleId        String       @map("couple_id")
+  triggerEventId  String       @map("trigger_event_id")
+  templateId      String       @map("template_id")
+  assigneeUserId  String       @map("assignee_user_id")
+  dueAt           DateTime?    @map("due_at")
+  status          String       @default("open")
+  completedAt     DateTime?    @map("completed_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  couple        Couple         @relation(fields: [coupleId], references: [id])
+  triggerEvent  RuleEvent      @relation(fields: [triggerEventId], references: [id])
+  template      RepairTemplate @relation(fields: [templateId], references: [id])
+  assignee      User           @relation(fields: [assigneeUserId], references: [id])
+
+  @@map("repair_actions")
+}
+
+model SafetyAction {
+  id          String           @id
+  coupleId    String           @map("couple_id")
+  actorUserId String           @map("actor_user_id")
+  actionType  String           @map("action_type")
+  reason      String?
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  couple Couple @relation(fields: [coupleId], references: [id])
+  actor  User   @relation(fields: [actorUserId], references: [id])
+
+  @@map("safety_actions")
+}
+
+model AnalyticsEvent {
+  id        BigInt   @id @default(autoincrement())
+  userId    String?  @map("user_id")
+  coupleId  String?  @map("couple_id")
+  eventName String   @map("event_name")
+  payload   Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User?   @relation(fields: [userId], references: [id])
+  couple Couple? @relation(fields: [coupleId], references: [id])
+
+  @@map("analytics_events")
+}

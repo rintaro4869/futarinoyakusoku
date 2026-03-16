@@ -1,0 +1,23 @@
+name = "futari-no-yakusoku-api"
+main = "src/worker.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare Workers: Free tier
+# Limits: 100,000 req/day, 10ms CPU/req (paid: unlimited)
+
+[vars]
+APP_URL = "https://futari-no-yakusoku.pages.dev"
+WEB_URL = "https://futari-no-yakusoku.pages.dev"
+
+# Secrets (set via: wrangler secret put DATABASE_URL)
+# DATABASE_URL  → Neon PostgreSQL connection string
+# JWT_SECRET    → random 32+ char string
+
+[[migrations]]
+tag = "v1"
+new_classes = []
+
+# Development overrides
+[env.dev]
+vars = { APP_URL = "http://localhost:3000", WEB_URL = "http://localhost:3000" }

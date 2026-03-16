@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+out/
+.next/
+.vercel/
+
+# Environment
+.env
+.env.local
+.env.production.local
+.dev.vars
+
+# Prisma
+packages/db/prisma/migrations/**/*.sql.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Wrangler
+wrangler-session-config.json
