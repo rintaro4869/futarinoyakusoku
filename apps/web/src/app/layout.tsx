@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'ふたりの約束',
+  title: 'Pairlog',
   description: '約束のすれ違いを、責めずに整えるためのアプリです',
 }
 

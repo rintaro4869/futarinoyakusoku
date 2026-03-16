@@ -1,4 +1,4 @@
-name = "futari-no-yakusoku-api"
+name = "pairlog-api"
 main = "src/worker.ts"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
@@ -7,8 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 # Limits: 100,000 req/day, 10ms CPU/req (paid: unlimited)
 
 [vars]
-APP_URL = "https://futari-no-yakusoku.pages.dev"
-WEB_URL = "https://futari-no-yakusoku.pages.dev"
+APP_URL = "https://pairlog.pages.dev"
+WEB_URL = "https://pairlog.pages.dev"
 
 # Secrets (set via: wrangler secret put DATABASE_URL)
 # DATABASE_URL  → Neon PostgreSQL connection string
