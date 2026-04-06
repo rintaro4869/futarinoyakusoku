@@ -1,49 +1,47 @@
 'use client'
 
-import type { Metadata } from 'next'
 import { useState } from 'react'
 import Link from 'next/link'
 
-// App Store承認後にこのURLを更新する
 const APP_STORE_URL = 'https://apps.apple.com/app/id6760982290'
 
 const faqs = [
-  { q: '無料ですか？', a: 'はい、すべての機能を無料でご利用いただけます。' },
-  { q: 'iPhoneとAndroid、両方使えますか？', a: '現在はiOS（iPhone）向けアプリがApp Storeで公開中です。' },
-  { q: 'データは相手に全部見られますか？', a: '約束の達成記録・感謝・カレンダーはふたりで共有されます。' },
-  { q: '使うのをやめたいときは？', a: 'アプリの設定画面からいつでも一時停止・退会・データ完全削除ができます。' },
-  { q: 'パートナーと繋がる方法は？', a: 'アプリ内で招待リンクを生成して送るだけです。かんたんに繋がれます。' },
+  { q: 'Is it free?', a: 'Yes, all features are completely free.' },
+  { q: 'Is it available on iPhone and Android?', a: 'Pairlog is currently available on iOS (iPhone) via the App Store.' },
+  { q: 'Can my partner see everything I log?', a: 'Promise records, gratitude logs, and calendar entries are shared between the two of you.' },
+  { q: 'What if I want to stop using it?', a: 'You can pause, delete your account, or remove all data anytime from the app settings.' },
+  { q: 'How do I connect with my partner?', a: 'Generate an invite link inside the app and send it to your partner. Simple.' },
 ]
 
-export default function JaPage() {
+export default function EnPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
     <main className="flex flex-col min-h-screen" style={{ backgroundColor: '#fdf2f8' }}>
 
-      {/* 言語切替 */}
+      {/* Language switcher */}
       <div className="flex justify-end px-4 pt-4">
-        <Link href="/en" className="text-xs text-pink-400 font-semibold border border-pink-200 rounded-full px-3 py-1">
-          English
+        <Link href="/" className="text-xs text-pink-400 font-semibold border border-pink-200 rounded-full px-3 py-1">
+          日本語
         </Link>
       </div>
 
       {/* Hero */}
       <section className="bg-brand-500 px-6 pt-10 pb-10 text-center">
         <p className="text-pink-200 text-xs font-semibold tracking-widest uppercase mb-4">
-          カップル・夫婦の記録アプリ
+          The couple&apos;s logging app
         </p>
         <h1 className="text-4xl font-black text-white mb-3 tracking-tight">
           Pairlog
         </h1>
         <p className="text-pink-100 text-lg leading-relaxed mb-1 font-medium">
-          ふたりの記録を、毎日ためよう。
+          Record your days together.
         </p>
         <p className="text-pink-100 text-sm leading-relaxed mb-8">
-          感謝・約束・カレンダーをひとつのアプリに。
+          Gratitude, promises, and memories — all in one place.
         </p>
 
-        {/* App Store ボタン */}
+        {/* App Store button */}
         <a
           href={APP_STORE_URL}
           target="_blank"
@@ -53,24 +51,24 @@ export default function JaPage() {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
           </svg>
-          App Store からダウンロード
+          Download on App Store
         </a>
-        <p className="mt-3 text-xs text-pink-200">無料 · iPhone対応</p>
+        <p className="mt-3 text-xs text-pink-200">Free · iPhone</p>
       </section>
 
       {/* Problem */}
       <section className="px-6 py-12">
         <div className="bg-white rounded-3xl shadow-sm p-6">
-          <p className="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2">こんな経験ありませんか？</p>
+          <p className="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2">Sound familiar?</p>
           <h2 className="text-xl font-black text-gray-900 mb-6 leading-snug">
-            ふたりの間に<br />すれ違いが生まれる前に。
+            Before small things<br />become big ones.
           </h2>
           <div className="space-y-3">
             {[
-              '「言った」「言わない」でケンカになった',
-              '約束したことを、なんとなく流してしまった',
-              '相手の気持ちに、ずっと気づかなかった',
-              '感謝を伝えたいのに、タイミングを逃してしまった',
+              '"I said it." "No you didn\'t." — another argument.',
+              'A promise made, then quietly forgotten.',
+              'Not noticing how your partner was feeling — for weeks.',
+              'Wanting to say thank you, but never finding the right moment.',
             ].map((text) => (
               <div key={text} className="flex items-start gap-3 bg-gray-50 rounded-2xl px-4 py-3">
                 <span className="text-gray-300 font-bold shrink-0 mt-0.5">×</span>
@@ -80,8 +78,8 @@ export default function JaPage() {
           </div>
           <div className="mt-5 bg-pink-50 rounded-2xl px-4 py-4 text-center">
             <p className="text-sm text-gray-700 leading-relaxed">
-              記録する仕組みがあるだけで、<br />
-              <span className="font-bold text-brand-600">ふたりの関係はやさしく変わっていく。</span>
+              A simple place to log things together<br />
+              <span className="font-bold text-brand-600">can quietly change everything.</span>
             </p>
           </div>
         </div>
@@ -91,13 +89,13 @@ export default function JaPage() {
       <section className="px-6 pb-12">
         <div className="bg-white rounded-3xl shadow-sm p-6">
           <p className="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2">Features</p>
-          <h2 className="text-xl font-black text-gray-900 mb-6">4つの機能</h2>
+          <h2 className="text-xl font-black text-gray-900 mb-6">4 things you can do</h2>
           <div className="space-y-3">
             {[
-              { icon: '📝', title: '約束リスト', desc: 'ふたりで決めたことを一覧で管理。言いっぱなしにしない。', bg: 'bg-pink-50' },
-              { icon: '🙏', title: 'ありがとうの記録', desc: '相手に感謝した出来事を言葉と一緒に残せる。', bg: 'bg-sky-50' },
-              { icon: '📅', title: 'カレンダー', desc: 'いつ、何をしたか。カレンダーで振り返れる。', bg: 'bg-orange-50' },
-              { icon: '🎁', title: 'ごほうび機能', desc: '記録を積み重ねるとポイントがたまり、ふたりのごほうびにつなげられる。', bg: 'bg-emerald-50' },
+              { icon: '📝', title: 'Promise List', desc: 'Keep track of what you\'ve agreed on — so nothing gets forgotten.', bg: 'bg-pink-50' },
+              { icon: '🙏', title: 'Gratitude Log', desc: 'Record the moments you felt thankful for your partner, with a note to remember why.', bg: 'bg-sky-50' },
+              { icon: '📅', title: 'Calendar', desc: 'Look back and see what you did together and when.', bg: 'bg-orange-50' },
+              { icon: '🎁', title: 'Rewards', desc: 'As you log more, you earn points toward rewards you choose together.', bg: 'bg-emerald-50' },
             ].map(({ icon, title, desc, bg }) => (
               <div key={title} className={`${bg} rounded-2xl p-4 flex items-start gap-3`}>
                 <span className="text-2xl shrink-0">{icon}</span>
@@ -115,13 +113,13 @@ export default function JaPage() {
       <section className="px-6 pb-12">
         <div className="bg-white rounded-3xl shadow-sm p-6">
           <p className="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2">Safety</p>
-          <h2 className="text-xl font-black text-gray-900 mb-5">安心して使える設計</h2>
+          <h2 className="text-xl font-black text-gray-900 mb-5">Built with care</h2>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: '🤝', label: 'ふたりの合意で使う', desc: '招待を受け入れた場合のみ' },
-              { icon: '⏸️', label: 'いつでも停止', desc: '単独で一時停止できます' },
-              { icon: '🚫', label: '監視目的は禁止', desc: '違反は利用停止対象です' },
-              { icon: '🗑️', label: 'データ完全削除', desc: '退会時にすべて削除可能' },
+              { icon: '🤝', label: 'Mutual consent only', desc: 'Only works when both agree' },
+              { icon: '⏸️', label: 'Pause anytime', desc: 'Either person can pause independently' },
+              { icon: '🚫', label: 'No surveillance', desc: 'Misuse results in account suspension' },
+              { icon: '🗑️', label: 'Full data deletion', desc: 'Delete everything on account removal' },
             ].map(({ icon, label, desc }) => (
               <div key={label} className="bg-gray-50 rounded-2xl p-4 text-center">
                 <div className="text-2xl mb-2">{icon}</div>
@@ -137,7 +135,7 @@ export default function JaPage() {
       <section className="px-6 pb-12">
         <div className="bg-white rounded-3xl shadow-sm p-6">
           <p className="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2">FAQ</p>
-          <h2 className="text-xl font-black text-gray-900 mb-5">よくある質問</h2>
+          <h2 className="text-xl font-black text-gray-900 mb-5">Questions</h2>
           <div className="space-y-2">
             {faqs.map(({ q, a }, i) => (
               <div key={i} className="border border-gray-100 rounded-2xl overflow-hidden">
@@ -163,24 +161,24 @@ export default function JaPage() {
       <section className="px-6 pb-16">
         <div className="bg-brand-500 rounded-3xl p-8 text-center">
           <p className="text-3xl mb-4">💑</p>
-          <p className="text-xl font-black text-white mb-1">ふたりで、今日から始めよう</p>
-          <p className="text-sm text-pink-200 mb-7">無料 · iPhone対応</p>
+          <p className="text-xl font-black text-white mb-1">Start logging together, today.</p>
+          <p className="text-sm text-pink-200 mb-7">Free · iPhone</p>
           <a
             href={APP_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full py-4 rounded-full bg-white text-brand-600 font-black text-base active:scale-95 transition-transform shadow text-center"
           >
-            App Store でダウンロード
+            Download on App Store
           </a>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="px-6 pb-10 text-center space-y-2">
-        <Link href="/en" className="text-xs text-gray-400 underline">English</Link>
+        <Link href="/" className="text-xs text-gray-400 underline">日本語</Link>
         <p className="text-xs text-gray-300">© 2026 Pairlog</p>
-        <Link href="/privacy" className="text-xs text-gray-300 underline">プライバシーポリシー</Link>
+        <Link href="/privacy" className="text-xs text-gray-300 underline">Privacy Policy</Link>
       </footer>
 
     </main>
