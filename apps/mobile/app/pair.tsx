@@ -13,54 +13,78 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as Haptics from 'expo-haptics'
 import * as Clipboard from 'expo-clipboard'
+import { Ionicons } from '@expo/vector-icons'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '../constants/colors'
-import { createAnonymousUser, createCouple, joinCouple } from '../lib/api'
+import { createCouple, joinCouple } from '../lib/api'
 import { useAuthStore } from '../lib/store'
+import { isInviteCodeReady } from '../lib/invite'
+import { getTutorialSeen, setInviteInfo, setPairingDeferred } from '../lib/storage'
+import { t } from '../lib/i18n'
 
 type Mode = 'choose' | 'create' | 'join'
 
 export default function PairScreen() {
   const router = useRouter()
-  const { coupleId, token, setCoupleId } = useAuthStore((s) => ({
-    coupleId: s.coupleId,
-    token: s.token,
-    setCoupleId: s.setCoupleId,
-  }))
+  const insets = useSafeAreaInsets()
+  const { code: deepLinkCode } = useLocalSearchParams<{ code?: string }>()
+  const coupleId = useAuthStore((s) => s.coupleId)
+  const token = useAuthStore((s) => s.token)
+  const setCoupleId = useAuthStore((s) => s.setCoupleId)
 
-  // すでにペアが存在する場合はホームへ
-  useEffect(() => {
-    if (coupleId) {
-      router.replace('/(home)')
-    }
-  }, [coupleId])
-
-  // トークンがなければ匿名ユーザーを作成（ディープリンク対応）
+  // トークンがなければ登録画面に戻す
   useEffect(() => {
     if (!token) {
-      createAnonymousUser().catch(() => {})
+      router.replace('/register')
     }
-  }, [])
-  const [mode, setMode] = useState<Mode>('choose')
+  }, [token])
+
+  const [mode, setMode] = useState<Mode>(() => (deepLinkCode ? 'join' : 'choose'))
   const [name, setName] = useState('')
-  const [inviteCode, setInviteCode] = useState('')
+  const [inviteCode, setInviteCode] = useState(() =>
+    deepLinkCode ? deepLinkCode.toUpperCase() : ''
+  )
+
+  // バックグラウンドから復帰して URL が変わった場合にも自動反映する
+  useEffect(() => {
+    if (deepLinkCode) {
+      setMode('join')
+      setInviteCode(deepLinkCode.toUpperCase())
+    }
+  }, [deepLinkCode])
   const [loading, setLoading] = useState(false)
   const [createdCouple, setCreatedCouple] = useState<{
     couple_id: string
     invite_code: string
     invite_url: string
   } | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [copiedField, setCopiedField] = useState<'code' | 'link' | null>(null)
+
+  // すでにペアが存在する場合はホームへ（招待リンク表示中は遷移しない）
+  useEffect(() => {
+    if (coupleId && !createdCouple) {
+      router.replace('/(home)')
+    }
+  }, [coupleId, createdCouple, router])
 
   function goMode(m: Mode) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     setMode(m)
     setCreatedCouple(null)
     setName('')
-    setInviteCode('')
+    setInviteCode(m === 'join' && deepLinkCode ? deepLinkCode.toUpperCase() : '')
+  }
+
+  function buildInviteShareText(code: string, url: string) {
+    return [
+      t('pairing.share_message_prefix').trim(),
+      `${t('pairing.invite_code_label')}: ${code}`,
+      `${t('pairing.invite_link_label')}: ${url}`,
+    ].join('\n')
   }
 
   async function handleCreate() {
@@ -70,9 +94,11 @@ export default function PairScreen() {
     try {
       const data = await createCouple(name.trim())
       await setCoupleId(data.couple_id)
+      await setPairingDeferred(false)
+      await setInviteInfo(data.invite_code, data.invite_url)
       setCreatedCouple(data)
     } catch (e: any) {
-      Alert.alert('エラー', e.message ?? '通信エラーが発生しました')
+      Alert.alert(t('common.error'), e.message ?? t('common.error_network'))
     } finally {
       setLoading(false)
     }
@@ -82,8 +108,9 @@ export default function PairScreen() {
     if (!createdCouple) return
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     try {
+      const message = buildInviteShareText(createdCouple.invite_code, createdCouple.invite_url)
       await Share.share({
-        message: 'Pairlogで一緒に約束を記録しよう！\n' + createdCouple.invite_url,
+        message,
         url: createdCouple.invite_url,
       })
     } catch {}
@@ -91,42 +118,48 @@ export default function PairScreen() {
 
   async function handleShareLine() {
     if (!createdCouple) return
-    const text = encodeURIComponent('Pairlogで一緒に約束を記録しよう！\n' + createdCouple.invite_url)
+    const text = encodeURIComponent(
+      buildInviteShareText(createdCouple.invite_code, createdCouple.invite_url)
+    )
     const lineUrl = `https://line.me/R/msg/text/?${text}`
     const supported = await Linking.canOpenURL(lineUrl)
     if (supported) {
       await Linking.openURL(lineUrl)
     } else {
-      Alert.alert('LINEが見つかりません', 'LINEアプリをインストールしてください')
+      Alert.alert(t('pairing.line_not_found_title'), t('pairing.line_not_found_message'))
     }
   }
 
-  async function handleCopy() {
+  async function handleCopy(field: 'code' | 'link') {
     if (!createdCouple) return
-    await Clipboard.setStringAsync(createdCouple.invite_url)
+    const value = field === 'code' ? createdCouple.invite_code : createdCouple.invite_url
+    await Clipboard.setStringAsync(value)
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setCopiedField(field)
+    setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 2000)
   }
 
   async function handleJoin() {
-    if (!name.trim() || inviteCode.trim().length < 6 || loading) return
+    if (!name.trim() || !isInviteCodeReady(inviteCode) || loading) return
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     setLoading(true)
     try {
       const data = await joinCouple(inviteCode.trim().toUpperCase(), name.trim())
       await setCoupleId(data.couple_id)
+      await setPairingDeferred(false)
       router.replace('/tutorial')
     } catch (e: any) {
-      Alert.alert('エラー', e.message ?? '通信エラーが発生しました')
+      Alert.alert(t('common.error'), e.message ?? t('common.error_network'))
     } finally {
       setLoading(false)
     }
   }
 
-  function handleGoHome() {
+  async function handleGoHome() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    router.replace('/tutorial')
+    await setPairingDeferred(true)
+    const seen = await getTutorialSeen()
+    router.replace(seen ? '/(home)' : '/tutorial')
   }
 
   return (
@@ -136,11 +169,11 @@ export default function PairScreen() {
     >
       <LinearGradient
         colors={['#fdf2f8', '#fce7f3']}
-        style={styles.header}
+        style={[styles.header, { paddingTop: insets.top + 24 }]}
       >
-        <Text style={styles.headerTitle}>パートナーと繋がる</Text>
+        <Text style={styles.headerTitle}>{t('pairing.connect_title')}</Text>
         <Text style={styles.headerSub}>
-          どちらかが招待リンクを作成し、相手がコードで参加してください
+          {t('pairing.description')}
         </Text>
       </LinearGradient>
 
@@ -154,8 +187,8 @@ export default function PairScreen() {
               activeOpacity={0.85}
             >
               <Text style={styles.choiceEmoji}>{"📨"}</Text>
-              <Text style={styles.choiceTitle}>招待リンクを作る</Text>
-              <Text style={styles.choiceDesc}>あなたが先に始める場合はこちら</Text>
+              <Text style={styles.choiceTitle}>{t('pairing.create_choice_title')}</Text>
+              <Text style={styles.choiceDesc}>{t('pairing.create_choice_desc')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -164,8 +197,18 @@ export default function PairScreen() {
               activeOpacity={0.85}
             >
               <Text style={styles.choiceEmoji}>{"🔗"}</Text>
-              <Text style={styles.choiceTitle}>招待を受け取った</Text>
-              <Text style={styles.choiceDesc}>相手から受け取ったコードで参加</Text>
+              <Text style={styles.choiceTitle}>{t('pairing.join_choice_title')}</Text>
+              <Text style={styles.choiceDesc}>{t('pairing.join_choice_desc')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.ghostButton}
+              onPress={() => {
+                void handleGoHome()
+              }}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.ghostButtonText}>{t('pairing.skip_button')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -173,12 +216,12 @@ export default function PairScreen() {
         {mode === 'create' && !createdCouple && (
           <View>
             <TouchableOpacity onPress={() => goMode('choose')} style={styles.backBtn}>
-              <Text style={styles.backText}>{"← 戻る"}</Text>
+              <Text style={styles.backText}>{t('common.back')}</Text>
             </TouchableOpacity>
-            <Text style={styles.stepTitle}>あなたの名前を入れて招待リンクを作成します</Text>
+            <Text style={styles.stepTitle}>{t('pairing.name_step_desc')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="名前を入力"
+              placeholder={t('pairing.name_placeholder')}
               placeholderTextColor={Colors.textTertiary}
               value={name}
               onChangeText={setName}
@@ -193,52 +236,113 @@ export default function PairScreen() {
               {loading ? (
                 <ActivityIndicator color={Colors.textWhite} />
               ) : (
-                <Text style={styles.primaryButtonText}>招待リンクを作成</Text>
+                <Text style={styles.primaryButtonText}>{t('pairing.create_link')}</Text>
               )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.ghostButton}
+              onPress={() => {
+                void handleGoHome()
+              }}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.ghostButtonText}>{t('pairing.skip_button')}</Text>
             </TouchableOpacity>
           </View>
         )}
 
         {mode === 'create' && createdCouple && (
           <View>
-            <Text style={styles.stepTitle}>{"🎉"} 招待リンクができました！</Text>
+            <Text style={styles.stepTitle}>{t('pairing.invite_created')}</Text>
             <Text style={styles.stepDesc}>
-              パートナーにシェアして、一緒に始めましょう
+              {t('pairing.invite_created_desc')}
             </Text>
 
-            <View style={styles.inviteCard}>
-              <Text style={styles.inviteLabel}>招待コード</Text>
-              <Text style={styles.inviteCode}>{createdCouple.invite_code}</Text>
-              <Text style={styles.inviteUrl} numberOfLines={2}>
-                {createdCouple.invite_url}
-              </Text>
+            <View style={styles.inviteSection}>
+              <Text style={styles.inviteSectionTitle}>{t('pairing.invite_steps_title')}</Text>
+              <View style={styles.inviteStepsCard}>
+                {[
+                  t('pairing.invite_step_1'),
+                  t('pairing.invite_step_2'),
+                  t('pairing.invite_step_3'),
+                ].map((step, index) => (
+                  <View key={step} style={styles.inviteStepRow}>
+                    <View style={styles.inviteStepBadge}>
+                      <Text style={styles.inviteStepBadgeText}>{index + 1}</Text>
+                    </View>
+                    <Text style={styles.inviteStepText}>{step}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
 
-            <TouchableOpacity
-              style={styles.shareButton}
-              onPress={handleShare}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.shareButtonText}>{"📤"} シェアする</Text>
-            </TouchableOpacity>
+            <View style={styles.inviteSection}>
+              <Text style={styles.inviteSectionTitle}>{t('pairing.invite_info_title')}</Text>
+              <View style={styles.inviteInfoCard}>
+                <View style={styles.inviteInfoRow}>
+                  <Text style={styles.inviteInfoLabel}>{t('pairing.invite_code_label')}</Text>
+                  <Text style={styles.inviteInfoCode}>{createdCouple.invite_code}</Text>
+                </View>
+                <View style={styles.inviteInfoDivider} />
+                <View style={styles.inviteInfoRowStack}>
+                  <Text style={styles.inviteInfoLabel}>{t('pairing.invite_link_label')}</Text>
+                  <Text style={styles.inviteInfoLink}>{createdCouple.invite_url}</Text>
+                </View>
+              </View>
+            </View>
 
-            <TouchableOpacity
-              style={styles.lineButton}
-              onPress={handleShareLine}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.lineButtonText}>{"💬"} LINEで送る</Text>
-            </TouchableOpacity>
+            <View style={styles.inviteSection}>
+              <Text style={styles.inviteSectionTitle}>{t('pairing.invite_actions_title')}</Text>
+              <TouchableOpacity
+                style={styles.invitePrimaryAction}
+                onPress={handleShare}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="share-social-outline" size={18} color={Colors.textWhite} />
+                <Text style={styles.invitePrimaryActionText}>{t('pairing.share_action')}</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.copyButton}
-              onPress={handleCopy}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.copyButtonText}>
-                {copied ? 'コピーしました' : 'リンクをコピー'}
-              </Text>
-            </TouchableOpacity>
+              <View style={styles.inviteSecondaryActionsRow}>
+                <TouchableOpacity
+                  style={[styles.inviteSecondaryAction, styles.inviteSecondaryActionLine]}
+                  onPress={handleShareLine}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.inviteSecondaryActionLineText}>LINE</Text>
+                  <Text style={styles.inviteSecondaryActionText}>{t('pairing.line_action')}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.inviteSecondaryAction}
+                  onPress={() => handleCopy('code')}
+                  activeOpacity={0.85}
+                >
+                  <Ionicons
+                    name={copiedField === 'code' ? 'checkmark-outline' : 'copy-outline'}
+                    size={18}
+                    color={copiedField === 'code' ? Colors.success : Colors.textPrimary}
+                  />
+                  <Text style={styles.inviteSecondaryActionText}>
+                    {copiedField === 'code' ? t('pairing.copy_done') : t('pairing.copy_code')}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.inviteSecondaryAction}
+                  onPress={() => handleCopy('link')}
+                  activeOpacity={0.85}
+                >
+                  <Ionicons
+                    name={copiedField === 'link' ? 'checkmark-outline' : 'copy-outline'}
+                    size={18}
+                    color={copiedField === 'link' ? Colors.success : Colors.textPrimary}
+                  />
+                  <Text style={styles.inviteSecondaryActionText}>
+                    {copiedField === 'link' ? t('pairing.copy_done') : t('pairing.copy_link')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
             <View style={styles.divider} />
 
@@ -247,15 +351,17 @@ export default function PairScreen() {
               onPress={() => goMode('join')}
               activeOpacity={0.85}
             >
-              <Text style={styles.secondaryButtonText}>コードを入力して参加する</Text>
+              <Text style={styles.secondaryButtonText}>{t('pairing.enter_code_button')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.ghostButton}
-              onPress={handleGoHome}
+              onPress={() => {
+                void handleGoHome()
+              }}
               activeOpacity={0.85}
             >
-              <Text style={styles.ghostButtonText}>チュートリアルを見る</Text>
+              <Text style={styles.ghostButtonText}>{t('pairing.tutorial_button')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -263,13 +369,17 @@ export default function PairScreen() {
         {mode === 'join' && (
           <View>
             <TouchableOpacity onPress={() => goMode('choose')} style={styles.backBtn}>
-              <Text style={styles.backText}>{"← 戻る"}</Text>
+              <Text style={styles.backText}>{t('common.back')}</Text>
             </TouchableOpacity>
-            <Text style={styles.stepTitle}>相手から受け取った招待コードを入力してください</Text>
+            <Text style={styles.stepTitle}>
+              {deepLinkCode
+                ? t('pairing.code_auto_filled')
+                : t('pairing.code_manual')}
+            </Text>
 
             <TextInput
               style={styles.input}
-              placeholder="名前を入力"
+              placeholder={t('pairing.name_placeholder')}
               placeholderTextColor={Colors.textTertiary}
               value={name}
               onChangeText={setName}
@@ -278,34 +388,44 @@ export default function PairScreen() {
 
             <TextInput
               style={[styles.input, styles.codeInput]}
-              placeholder="招待コード（6文字）"
+              placeholder={t('pairing.code_placeholder_8')}
               placeholderTextColor={Colors.textTertiary}
               value={inviteCode}
-              onChangeText={(t) => setInviteCode(t.toUpperCase())}
+              onChangeText={(v) => setInviteCode(v.toUpperCase())}
               maxLength={8}
               autoCapitalize="characters"
               autoCorrect={false}
             />
 
             <Text style={styles.joinNote}>
-              {"⚠️"} 同じ端末での両方の参加はできません。相手の端末で開いてください
+              {t('pairing.same_device_warning')}
             </Text>
 
             <TouchableOpacity
               style={[
                 styles.primaryButton,
                 styles.primaryButtonOrange,
-                (!name.trim() || inviteCode.trim().length < 6) && styles.primaryButtonDisabled,
+                (!name.trim() || !isInviteCodeReady(inviteCode)) && styles.primaryButtonDisabled,
               ]}
               onPress={handleJoin}
-              disabled={!name.trim() || inviteCode.trim().length < 6 || loading}
+              disabled={!name.trim() || !isInviteCodeReady(inviteCode) || loading}
               activeOpacity={0.85}
             >
               {loading ? (
                 <ActivityIndicator color={Colors.textWhite} />
               ) : (
-                <Text style={styles.primaryButtonText}>参加する</Text>
+                <Text style={styles.primaryButtonText}>{t('pairing.join_button')}</Text>
               )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.ghostButton}
+              onPress={() => {
+                void handleGoHome()
+              }}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.ghostButtonText}>{t('pairing.skip_button')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -320,7 +440,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   header: {
-    paddingTop: 72,
     paddingBottom: 28,
     paddingHorizontal: 24,
   },
@@ -393,6 +512,54 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     lineHeight: 20,
   },
+  inviteSection: {
+    marginBottom: 16,
+  },
+  inviteSectionTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: Colors.textSecondary,
+    marginBottom: 10,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+  },
+  inviteStepsCard: {
+    backgroundColor: Colors.backgroundSecondary,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  inviteStepRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderLight,
+  },
+  inviteStepBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.orange,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  inviteStepBadgeText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: Colors.textWhite,
+  },
+  inviteStepText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
+    color: Colors.textPrimary,
+    fontWeight: '600',
+  },
   input: {
     borderWidth: 1.5,
     borderColor: Colors.border,
@@ -436,74 +603,100 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
   },
-  inviteCard: {
+  inviteInfoCard: {
     backgroundColor: Colors.backgroundPink,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
+    borderRadius: 18,
+    padding: 18,
     borderWidth: 1,
     borderColor: Colors.brandLighter,
+  },
+  inviteInfoRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
   },
-  inviteLabel: {
-    fontSize: 13,
+  inviteInfoRowStack: {
+    gap: 8,
+  },
+  inviteInfoLabel: {
+    fontSize: 12,
+    fontWeight: '700',
     color: Colors.textSecondary,
-    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
-  inviteCode: {
-    fontSize: 32,
+  inviteInfoCode: {
+    fontSize: 28,
     fontWeight: '800',
     color: Colors.brandDark,
-    letterSpacing: 4,
-    marginBottom: 10,
+    letterSpacing: 3,
     fontVariant: ['tabular-nums'],
   },
-  inviteUrl: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    textAlign: 'center',
+  inviteInfoDivider: {
+    height: 1,
+    backgroundColor: Colors.brandLighter,
+    marginVertical: 14,
   },
-  shareButton: {
+  inviteInfoLink: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: Colors.textPrimary,
+  },
+  invitePrimaryAction: {
+    borderRadius: 16,
     backgroundColor: Colors.brand,
-    borderRadius: 12,
-    paddingVertical: 18,
+    paddingVertical: 16,
     alignItems: 'center',
-    marginBottom: 12,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
     shadowColor: Colors.brand,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 14,
+    elevation: 3,
   },
-  shareButtonText: {
-    color: Colors.textWhite,
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  lineButton: {
-    backgroundColor: '#06C755',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  lineButtonText: {
-    color: Colors.textWhite,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  copyButton: {
-    borderWidth: 1.5,
-    borderColor: Colors.brand,
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  copyButtonText: {
-    color: Colors.brand,
+  invitePrimaryActionText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '700',
+    color: Colors.textWhite,
+  },
+  inviteSecondaryActionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginTop: 10,
+  },
+  inviteSecondaryAction: {
+    minHeight: 52,
+    flexBasis: '48%',
+    flexGrow: 1,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.backgroundSecondary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  inviteSecondaryActionLine: {
+    borderColor: '#06C75533',
+    backgroundColor: '#F4FFF7',
+  },
+  inviteSecondaryActionLineText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#06C755',
+    letterSpacing: 0.2,
+  },
+  inviteSecondaryActionText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: Colors.textPrimary,
   },
   divider: {
     height: 1,

@@ -1,0 +1,36 @@
+{
+  "name": "mobile",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^15.1.1",
+    "expo": "~55.0.6",
+    "expo-clipboard": "~55.0.9",
+    "expo-haptics": "~55.0.9",
+    "expo-linear-gradient": "~55.0.9",
+    "expo-localization": "~55.0.11",
+    "expo-notifications": "~55.0.13",
+    "expo-router": "~55.0.7",
+    "expo-secure-store": "~55.0.9",
+    "expo-sharing": "~55.0.14",
+    "expo-status-bar": "~55.0.4",
+    "react": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-safe-area-context": "~5.6.2",
+    "react-native-screens": "~4.23.0",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~5.9.2",
+    "vitest": "^1.6.1"
+  },
+  "private": true
+}
