@@ -16,10 +16,10 @@ export function safetyRoutes(app: Hono<{ Variables: Variables }>) {
     if (!membership) return c.json(makeError('FORBIDDEN'), 403)
     if (couple.status === 'closed') return c.json(makeError('COUPLE_CLOSED'), 403)
 
-    await prisma.$transaction(async (tx) => {
-      await tx.couple.update({ where: { id: coupleId }, data: { status: 'paused' } })
-      await tx.safetyAction.create({ data: { id: generateId(), coupleId, actorUserId: userId, actionType: 'pause' } })
-    })
+    await prisma.$transaction([
+      prisma.couple.update({ where: { id: coupleId }, data: { status: 'paused' } }),
+      prisma.safetyAction.create({ data: { id: generateId(), coupleId, actorUserId: userId, actionType: 'pause' } }),
+    ])
 
     await trackEvent(prisma, { eventName: 'safety_pause_enabled', userId, coupleId })
     return c.json({ status: 'paused' })
@@ -36,10 +36,10 @@ export function safetyRoutes(app: Hono<{ Variables: Variables }>) {
     if (!membership) return c.json(makeError('FORBIDDEN'), 403)
     if (couple.status === 'closed') return c.json(makeError('COUPLE_CLOSED'), 403)
 
-    await prisma.$transaction(async (tx) => {
-      await tx.couple.update({ where: { id: coupleId }, data: { status: 'active' } })
-      await tx.safetyAction.create({ data: { id: generateId(), coupleId, actorUserId: userId, actionType: 'unpause' } })
-    })
+    await prisma.$transaction([
+      prisma.couple.update({ where: { id: coupleId }, data: { status: 'active' } }),
+      prisma.safetyAction.create({ data: { id: generateId(), coupleId, actorUserId: userId, actionType: 'unpause' } }),
+    ])
 
     await trackEvent(prisma, { eventName: 'safety_pause_disabled', userId, coupleId })
     return c.json({ status: 'active' })
@@ -57,7 +57,7 @@ export function safetyRoutes(app: Hono<{ Variables: Variables }>) {
       }).catch(() => {})
     }
 
-    await trackEvent(prisma, { eventName: 'data_deletion_requested', userId, coupleId: coupleId ?? null })
+    await trackEvent(prisma, { eventName: 'help_link_clicked', userId, coupleId: coupleId ?? null })
     return new Response(null, { status: 204 })
   })
 }

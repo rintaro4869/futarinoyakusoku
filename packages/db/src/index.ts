@@ -5,6 +5,7 @@ export type {
   Membership,
   InviteCode,
   Rule,
+  RuleOccurrenceAction,
   RuleEvent,
   PointLedger,
   RepairTemplate,

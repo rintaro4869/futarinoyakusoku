@@ -20,8 +20,11 @@ const VALID_EVENTS = new Set([
   'repair_completed',
   'safety_pause_enabled',
   'safety_pause_disabled',
+  'help_link_clicked',
   'pair_unlinked',
   'data_deletion_requested',
+  'password_reset_requested',
+  'password_reset_completed',
 ])
 
 // Privacy: disallowed payload fields
@@ -55,10 +58,11 @@ export async function trackEvent(
 
   await prisma.analyticsEvent.create({
     data: {
+      id: generateId(),
       userId: opts.userId ?? null,
       coupleId: opts.coupleId ?? null,
       eventName: opts.eventName,
-      payload: sanitized as Parameters<typeof prisma.analyticsEvent.create>[0]['data']['payload'],
+      payload: JSON.stringify(sanitized),
     },
   }).catch((err: Error) => {
     // analytics failure should not break main flow

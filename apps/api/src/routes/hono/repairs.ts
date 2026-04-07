@@ -6,13 +6,13 @@ import { makeError } from '../../lib/error-codes.js'
 import { trackEvent } from '../../services/analytics.js'
 
 const createSchema = z.object({
-  trigger_event_id: z.string().min(1),
+  trigger_event_id: z.string().min(1).optional().nullable(),
   template_id: z.string().min(1),
   assignee_user_id: z.string().min(1),
   due_at: z.string().datetime().optional().nullable(),
 })
 
-function toRepair(r: { id: string; triggerEventId: string; templateId: string; assigneeUserId: string; status: string; dueAt: Date | null }) {
+function toRepair(r: { id: string; triggerEventId: string | null; templateId: string; assigneeUserId: string; status: string; dueAt: Date | null }) {
   return { id: r.id, trigger_event_id: r.triggerEventId, template_id: r.templateId, assignee_user_id: r.assigneeUserId, status: r.status, due_at: r.dueAt?.toISOString() ?? null }
 }
 
@@ -30,7 +30,7 @@ export function repairRoutes(app: Hono<{ Variables: Variables }>) {
     if (!template || !template.active) return c.json(makeError('NOT_FOUND'), 404)
 
     const repair = await prisma.repairAction.create({
-      data: { id: generateId(), coupleId, triggerEventId: body.trigger_event_id, templateId: body.template_id, assigneeUserId: body.assignee_user_id, dueAt: body.due_at ? new Date(body.due_at) : null, status: 'open' },
+      data: { id: generateId(), coupleId, triggerEventId: body.trigger_event_id ?? null, templateId: body.template_id, assigneeUserId: body.assignee_user_id, dueAt: body.due_at ? new Date(body.due_at) : null, status: 'open' },
     })
 
     await trackEvent(prisma, { eventName: 'repair_selected', userId, coupleId, payload: { repair_id: repair.id, template_id: body.template_id } })

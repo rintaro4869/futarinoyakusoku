@@ -1,18 +1,22 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
-  id        String    @id
-  locale    String    @default("ja-JP")
-  timezone  String    @default("Asia/Tokyo")
-  createdAt DateTime  @default(now()) @map("created_at")
-  deletedAt DateTime? @map("deleted_at")
+  id           String    @id
+  email        String?   @unique
+  passwordHash String?   @map("password_hash")
+  tokenVersion Int       @default(0) @map("token_version")
+  locale       String    @default("ja-JP")
+  timezone     String    @default("Asia/Tokyo")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  deletedAt    DateTime? @map("deleted_at")
 
   memberships   Membership[]
   reportedEvents RuleEvent[] @relation("reporter")
@@ -24,8 +28,22 @@ model User {
   safetyActions SafetyAction[]
   analyticsEvents AnalyticsEvent[]
   inviteCodes   InviteCode[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
+}
+
+model PasswordResetToken {
+  id        String   @id
+  userId    String   @map("user_id")
+  code      String
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
 }
 
 model Couple {
@@ -79,19 +97,47 @@ model Rule {
   coupleId            String    @map("couple_id")
   title               String
   objective           String?
+  startDate           DateTime? @map("start_date")
+  recurrenceType      String?   @map("recurrence_type")
+  recurrenceInterval  Int       @default(1) @map("recurrence_interval")
+  daysOfWeek          String?   @map("days_of_week")
+  dayOfMonth          Int?      @map("day_of_month")
+  timeOfDay           String?   @map("time_of_day")
   mode                String    @default("routine")
+  category            String?
   pointValue          Int       @map("point_value")
   threshold           Int
   thankYouThreshold   Int       @default(5)  @map("thank_you_threshold")
   nobishiroThreshold  Int       @default(3)  @map("nobishiro_threshold")
+  creatorUserId       String?   @map("creator_user_id")
+  assignee            String    @default("both")
+  recorder            String    @default("self")
   active              Boolean   @default(true)
+  reminderEnabled     Boolean   @default(false) @map("reminder_enabled")
+  reminderTime        String?   @map("reminder_time")
   createdAt           DateTime  @default(now()) @map("created_at")
   archivedAt          DateTime? @map("archived_at")
 
   couple Couple      @relation(fields: [coupleId], references: [id])
   events RuleEvent[]
+  occurrenceActions RuleOccurrenceAction[]
 
   @@map("rules")
+}
+
+model RuleOccurrenceAction {
+  id             String   @id
+  ruleId         String   @map("rule_id")
+  occurrenceDate DateTime @map("occurrence_date")
+  actionType     String   @map("action_type")
+  overrideTime   String?  @map("override_time")
+  note           String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  rule Rule @relation(fields: [ruleId], references: [id])
+
+  @@unique([ruleId, occurrenceDate])
+  @@map("rule_occurrence_actions")
 }
 
 model RuleEvent {
@@ -117,7 +163,7 @@ model RuleEvent {
   approver User?  @relation("approver", fields: [approvedBy], references: [id])
   rejector User?  @relation("rejector", fields: [rejectedBy], references: [id])
 
-  pointLedger   PointLedger?
+  pointLedger   PointLedger[]
   repairActions RepairAction[]
 
   @@map("rule_events")
@@ -127,7 +173,7 @@ model PointLedger {
   id            String   @id
   coupleId      String   @map("couple_id")
   userId        String   @map("user_id")
-  sourceEventId String   @unique @map("source_event_id")
+  sourceEventId String   @map("source_event_id")
   points        Int
   pointKind     String?  @map("point_kind")
   weekKey       String   @map("week_key")
@@ -137,6 +183,7 @@ model PointLedger {
   user        User      @relation(fields: [userId], references: [id])
   sourceEvent RuleEvent @relation(fields: [sourceEventId], references: [id])
 
+  @@unique([sourceEventId, userId])
   @@map("point_ledger")
 }
 
@@ -155,7 +202,7 @@ model RepairTemplate {
 model RepairAction {
   id              String       @id
   coupleId        String       @map("couple_id")
-  triggerEventId  String       @map("trigger_event_id")
+  triggerEventId  String?      @map("trigger_event_id")
   templateId      String       @map("template_id")
   assigneeUserId  String       @map("assignee_user_id")
   dueAt           DateTime?    @map("due_at")
@@ -164,7 +211,7 @@ model RepairAction {
   createdAt       DateTime     @default(now()) @map("created_at")
 
   couple        Couple         @relation(fields: [coupleId], references: [id])
-  triggerEvent  RuleEvent      @relation(fields: [triggerEventId], references: [id])
+  triggerEvent  RuleEvent?     @relation(fields: [triggerEventId], references: [id])
   template      RepairTemplate @relation(fields: [templateId], references: [id])
   assignee      User           @relation(fields: [assigneeUserId], references: [id])
 
@@ -186,11 +233,11 @@ model SafetyAction {
 }
 
 model AnalyticsEvent {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id
   userId    String?  @map("user_id")
   coupleId  String?  @map("couple_id")
   eventName String   @map("event_name")
-  payload   Json     @default("{}")
+  payload   String   @default("{}")
   createdAt DateTime @default(now()) @map("created_at")
 
   user   User?   @relation(fields: [userId], references: [id])

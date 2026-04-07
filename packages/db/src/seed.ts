@@ -12,7 +12,7 @@ async function main() {
     { id: 'ty_meal_01', category: 'thank_you', label: '食事メニューをリクエスト', description: '食べたいものを1回リクエストする', active: true },
   ]
 
-  // のびしろ解放: 約束のズレを整えるための行動
+  // 約束ポイント解放: 約束のズレを整えるための行動
   const nobishiroTemplates = [
     { id: 'nb_talk_01', category: 'nobishiro', label: '15分の振り返りタイム', description: 'ふたりで今週どうだったか短く話す', active: true },
     { id: 'nb_house_01', category: 'nobishiro', label: '家事を1つ代わりに担当', description: '相手が通常担当する家事を1回代わる', active: true },

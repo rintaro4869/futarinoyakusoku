@@ -1,116 +1,144 @@
-create table users (
-  id text primary key,
-  locale text not null default 'ja-JP',
-  timezone text not null default 'Asia/Tokyo',
-  created_at timestamptz not null default now(),
-  deleted_at timestamptz
+-- SQLite migration (D1 compatible)
+
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT NOT NULL PRIMARY KEY,
+  locale TEXT NOT NULL DEFAULT 'ja-JP',
+  timezone TEXT NOT NULL DEFAULT 'Asia/Tokyo',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  deleted_at TEXT
 );
 
-create table couples (
-  id text primary key,
-  status text not null check (status in ('pending','active','paused','closed')),
-  created_at timestamptz not null default now(),
-  closed_at timestamptz
+CREATE TABLE IF NOT EXISTS couples (
+  id TEXT NOT NULL PRIMARY KEY,
+  status TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  closed_at TEXT
 );
 
-create table memberships (
-  couple_id text not null references couples(id),
-  user_id text not null references users(id),
-  display_name text not null,
-  role text not null check (role in ('owner','partner')),
-  joined_at timestamptz not null default now(),
-  left_at timestamptz,
-  primary key (couple_id, user_id)
+CREATE TABLE IF NOT EXISTS memberships (
+  couple_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  display_name TEXT NOT NULL,
+  role TEXT NOT NULL,
+  joined_at TEXT NOT NULL DEFAULT (datetime('now')),
+  left_at TEXT,
+  PRIMARY KEY (couple_id, user_id),
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-create unique index ux_membership_active_two
-on memberships(couple_id, role)
-where left_at is null;
+CREATE UNIQUE INDEX IF NOT EXISTS ux_membership_active_two
+ON memberships(couple_id, role)
+WHERE left_at IS NULL;
 
-create table invite_codes (
-  code text primary key,
-  couple_id text not null references couples(id),
-  created_by text not null references users(id),
-  expires_at timestamptz not null,
-  used_at timestamptz
+CREATE TABLE IF NOT EXISTS invite_codes (
+  code TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  created_by TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  used_at TEXT,
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
-create table rules (
-  id text primary key,
-  couple_id text not null references couples(id),
-  title text not null,
-  objective text,
-  point_value int not null check (point_value between 1 and 5),
-  threshold int not null check (threshold between 3 and 20),
-  active boolean not null default true,
-  created_at timestamptz not null default now(),
-  archived_at timestamptz
+CREATE TABLE IF NOT EXISTS rules (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  objective TEXT,
+  mode TEXT NOT NULL DEFAULT 'routine',
+  point_value INTEGER NOT NULL,
+  threshold INTEGER NOT NULL,
+  thank_you_threshold INTEGER NOT NULL DEFAULT 5,
+  nobishiro_threshold INTEGER NOT NULL DEFAULT 3,
+  active INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  archived_at TEXT,
+  FOREIGN KEY (couple_id) REFERENCES couples(id)
 );
 
-create table rule_events (
-  id text primary key,
-  rule_id text not null references rules(id),
-  couple_id text not null references couples(id),
-  reporter_user_id text not null references users(id),
-  target_user_id text not null references users(id),
-  report_type text not null check (report_type in ('self','partner')),
-  note text,
-  status text not null check (status in ('pending','approved','rejected','expired')),
-  expires_at timestamptz not null,
-  approved_by text references users(id),
-  approved_at timestamptz,
-  rejected_by text references users(id),
-  rejected_at timestamptz,
-  created_at timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS rule_events (
+  id TEXT NOT NULL PRIMARY KEY,
+  rule_id TEXT NOT NULL,
+  couple_id TEXT NOT NULL,
+  reporter_user_id TEXT NOT NULL,
+  target_user_id TEXT NOT NULL,
+  report_type TEXT NOT NULL,
+  note TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  expires_at TEXT NOT NULL,
+  approved_by TEXT,
+  approved_at TEXT,
+  rejected_by TEXT,
+  rejected_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (rule_id) REFERENCES rules(id),
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (reporter_user_id) REFERENCES users(id),
+  FOREIGN KEY (target_user_id) REFERENCES users(id),
+  FOREIGN KEY (approved_by) REFERENCES users(id),
+  FOREIGN KEY (rejected_by) REFERENCES users(id)
 );
 
-create table point_ledger (
-  id text primary key,
-  couple_id text not null references couples(id),
-  user_id text not null references users(id),
-  source_event_id text not null references rule_events(id),
-  points int not null check (points > 0),
-  week_key text not null,
-  created_at timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS point_ledger (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  source_event_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  point_kind TEXT,
+  week_key TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (source_event_id) REFERENCES rule_events(id)
 );
 
-create unique index ux_point_ledger_unique_event
-on point_ledger(source_event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_point_ledger_unique_event
+ON point_ledger(source_event_id);
 
-create table repair_templates (
-  id text primary key,
-  category text not null,
-  label text not null,
-  description text not null,
-  active boolean not null default true
+CREATE TABLE IF NOT EXISTS repair_templates (
+  id TEXT NOT NULL PRIMARY KEY,
+  category TEXT NOT NULL,
+  label TEXT NOT NULL,
+  description TEXT NOT NULL,
+  active INTEGER NOT NULL DEFAULT 1
 );
 
-create table repair_actions (
-  id text primary key,
-  couple_id text not null references couples(id),
-  trigger_event_id text not null references rule_events(id),
-  template_id text not null references repair_templates(id),
-  assignee_user_id text not null references users(id),
-  due_at timestamptz,
-  status text not null check (status in ('open','completed','skipped','expired')),
-  completed_at timestamptz,
-  created_at timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS repair_actions (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  trigger_event_id TEXT NOT NULL,
+  template_id TEXT NOT NULL,
+  assignee_user_id TEXT NOT NULL,
+  due_at TEXT,
+  status TEXT NOT NULL DEFAULT 'open',
+  completed_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (trigger_event_id) REFERENCES rule_events(id),
+  FOREIGN KEY (template_id) REFERENCES repair_templates(id),
+  FOREIGN KEY (assignee_user_id) REFERENCES users(id)
 );
 
-create table safety_actions (
-  id text primary key,
-  couple_id text not null references couples(id),
-  actor_user_id text not null references users(id),
-  action_type text not null check (action_type in ('pause','unpause','leave','help_click')),
-  reason text,
-  created_at timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS safety_actions (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  actor_user_id TEXT NOT NULL,
+  action_type TEXT NOT NULL,
+  reason TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (couple_id) REFERENCES couples(id),
+  FOREIGN KEY (actor_user_id) REFERENCES users(id)
 );
 
-create table analytics_events (
-  id bigserial primary key,
-  user_id text references users(id),
-  couple_id text references couples(id),
-  event_name text not null,
-  payload jsonb not null default '{}'::jsonb,
-  created_at timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id TEXT NOT NULL PRIMARY KEY,
+  user_id TEXT,
+  couple_id TEXT,
+  event_name TEXT NOT NULL,
+  payload TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (couple_id) REFERENCES couples(id)
 );

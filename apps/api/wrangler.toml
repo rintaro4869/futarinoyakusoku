@@ -10,9 +10,21 @@ compatibility_flags = ["nodejs_compat"]
 APP_URL = "https://pairlog.pages.dev"
 WEB_URL = "https://pairlog.pages.dev"
 
-# Secrets (set via: wrangler secret put DATABASE_URL)
-# DATABASE_URL  → Neon PostgreSQL connection string
-# JWT_SECRET    → random 32+ char string
+# Secrets / vars
+# wrangler secret put JWT_SECRET
+# wrangler secret put RESEND_API_KEY
+# wrangler secret put RESET_EMAIL_FROM
+# wrangler secret put RESET_EMAIL_REPLY_TO
+# JWT_SECRET           → random 32+ char string
+# RESEND_API_KEY       → Resend API key
+# RESET_EMAIL_FROM     → verified sender (example: Pairlog <no-reply@example.com>)
+# RESET_EMAIL_REPLY_TO → optional support address
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pairlog-db"
+database_id = "68815222-a259-45d1-9cd3-811dfb31600d"
+migrations_dir = "../../packages/db/prisma/migrations"
 
 [[migrations]]
 tag = "v1"
