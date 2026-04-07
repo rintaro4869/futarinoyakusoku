@@ -15,6 +15,21 @@ export const MARKETING_SCREENSHOTS = [
   '/marketing/04_appstore.png',
 ] as const
 
+export const LANDING_SCREENSHOTS = {
+  ja: {
+    home: '/marketing/screens/ja-home.png',
+    promises: '/marketing/screens/ja-promises.png',
+    calendar: '/marketing/screens/ja-calendar.png',
+    rewards: '/marketing/screens/ja-rewards.png',
+  },
+  en: {
+    home: '/marketing/screens/en-home.png',
+    promises: '/marketing/screens/en-promises.png',
+    calendar: '/marketing/screens/en-calendar.png',
+    rewards: '/marketing/screens/en-rewards.png',
+  },
+} as const
+
 export type LandingLocale = 'ja' | 'en'
 
 type Tone = 'rose' | 'orange' | 'sky' | 'cream'
@@ -38,18 +53,9 @@ export type LandingCopy = {
     secondaryCta: string
     secondaryHref: string
     stats: { label: string; value: string }[]
-  }
-  pain: {
-    eyebrow: string
-    title: string
-    intro: string
-    items: string[]
-    note: string
-  }
-  flow: {
-    eyebrow: string
-    title: string
-    steps: { number: string; title: string; description: string }[]
+    screenshot: string
+    screenshotAlt: string
+    sideScreens: { src: string; alt: string; label: string }[]
   }
   showcase: {
     eyebrow: string
@@ -59,8 +65,9 @@ export type LandingCopy = {
       eyebrow: string
       title: string
       description: string
+      highlights: string[]
       tone: Tone
-      screenshot: (typeof MARKETING_SCREENSHOTS)[number]
+      screenshot: string
     }[]
   }
   safety: {
@@ -219,150 +226,124 @@ export function getDownloadCopy(locale: LandingLocale): DownloadCopy {
   if (locale === 'en') {
     return {
       path: '/en/download',
-      title: 'App Store release status',
-      description: 'Pairlog is still under Apple review. This page keeps the download path stable until the App Store listing is approved.',
-      statusTitle: 'The download path is already prepared.',
-      statusBody: 'The main App Store CTA stays in the most prominent place on the landing page, but the site does not claim the app is live before approval. Once Apple review finishes, this route can switch directly to the real store link.',
+      title: 'App Store status',
+      description: 'Pairlog is still in Apple review.',
+      statusTitle: 'App Store review in progress',
+      statusBody: 'This button stays in place now and can point to the real App Store page after approval.',
       points: [
-        'Current state: App Store review in progress',
         'Launch platform: iPhone',
-        'Switch plan: replace this pending route with the live App Store URL',
+        'Same link after approval',
       ],
-      footerNote: 'The store URL is ready, but the site should not imply public availability before Apple approval.',
+      footerNote: 'Until approval, this page only shows status.',
     }
   }
 
   return {
     path: '/download',
     title: 'App Store 公開状況',
-    description: 'Pairlog は現在 Apple の審査中です。公開後もダウンロード導線はこのページを起点に維持します。',
-    statusTitle: 'ダウンロード導線だけ先に固定しています。',
-    statusBody: 'ランディングページでは App Store CTA を一番目立つ位置に置きつつ、審査通過前に「公開中」とは案内しません。承認後はこの導線をそのまま App Store の本番リンクに切り替えます。',
+    description: 'Pairlog は現在 Apple の審査中です。',
+    statusTitle: '現在は App Store 審査中です',
+    statusBody: '承認後、この導線がそのまま App Store の本番リンクになります。',
     points: [
-      '現在の状態: App Store 審査中',
       '公開対象: iPhone',
-      '切り替え方: 承認後に App Store の本番URLへ変更',
+      '承認後にそのまま切り替え',
     ],
-    footerNote: 'URL は準備していても、審査通過前はダウンロード可能とは表示しない方針です。',
+    footerNote: '公開前は状態だけ案内しています。',
   }
 }
 
 export function getLandingCopy(locale: LandingLocale): LandingCopy {
   if (locale === 'en') {
+    const screens = LANDING_SCREENSHOTS.en
+
     return {
       locale: 'en',
       path: '/en',
-      title: 'A softer way to log promises and gratitude as a couple',
-      description: 'Pairlog is an iPhone app for couples to share promises, gratitude logs, weekly progress, and rewards. App Store release coming soon.',
+      title: 'A simple iPhone app for promises and shared days',
+      description: 'Pairlog is an iPhone app for couples to keep promises, gratitude, calendar history, and rewards in one simple place. App Store release coming soon.',
       keywords: ['couple app', 'relationship tracker', 'gratitude app', 'promise tracker', 'shared rewards', 'partner app', 'iPhone app for couples'],
       languageSwitchLabel: '日本語',
       languageSwitchHref: '/',
       navLabel: 'Pairlog',
       hero: {
-        eyebrow: 'A couple app for quieter conversations',
-        title: 'Log promises without turning them into blame.',
-        lead: 'Pairlog helps couples keep promises, notice gratitude, and build small rituals they can actually continue.',
-        body: 'It is designed for everyday relationship maintenance: shared promises, one-tap logs, weekly progress, rewards, and a pairing flow that feels lightweight instead of heavy.',
+        eyebrow: 'A simple app for two',
+        title: 'One place for promises and shared days.',
+        lead: 'Keep promises, gratitude, and your weekly view together.',
+        body: '',
         status: 'App Store review in progress',
-        availabilityNote: 'Built for iPhone first. Android is not part of the current launch.',
+        availabilityNote: 'iPhone launch coming soon.',
         secondaryCta: 'See the screens',
         secondaryHref: '#showcase',
         stats: [
-          { label: 'Pairing', value: 'Invite link' },
-          { label: 'Logging', value: 'One tap' },
-          { label: 'Progress', value: 'Weekly view' },
-          { label: 'Safety', value: 'Pause anytime' },
+          { label: 'Home', value: 'Daily view' },
+          { label: 'Promises', value: 'Shared list' },
+          { label: 'Calendar', value: 'Weekly view' },
         ],
-      },
-      pain: {
-        eyebrow: 'Why it exists',
-        title: 'For the moments that usually end in “I thought you knew.”',
-        intro: 'The goal is not scoring your partner. The goal is creating a calm place to record what matters before it turns into another exhausting conversation.',
-        items: [
-          'A promise was made, then half-forgotten.',
-          'You wanted to say thank you, but the moment passed.',
-          'The same small friction kept repeating every week.',
-          'You needed a shared system, not another argument about memory.',
-        ],
-        note: 'Pairlog turns “remember harder” into a shared routine the two of you can actually keep.',
-      },
-      flow: {
-        eyebrow: 'How it works',
-        title: 'Simple enough to keep using',
-        steps: [
-          {
-            number: '01',
-            title: 'Connect with your partner',
-            description: 'Start alone, then send an invite link when you are ready to share the same space.',
-          },
-          {
-            number: '02',
-            title: 'Create promises and gratitude triggers',
-            description: 'Set recurring promises or quick “thank you” moments that can be logged when they happen.',
-          },
-          {
-            number: '03',
-            title: 'Log, review, and unlock rewards',
-            description: 'Build points together, review the week, and turn progress into a reward or a conversation starter.',
-          },
+        screenshot: screens.home,
+        screenshotAlt: 'Pairlog home screen',
+        sideScreens: [
+          { src: screens.promises, alt: 'Pairlog promises screen', label: 'Promises' },
+          { src: screens.calendar, alt: 'Pairlog calendar screen', label: 'Calendar' },
         ],
       },
       showcase: {
-        eyebrow: 'Inside the app',
-        title: 'A warmer, more intentional daily flow',
-        description: 'The product is built around a few gentle surfaces instead of a cluttered dashboard.',
+        eyebrow: 'Screens',
+        title: 'What each screen is for',
+        description: 'Separate screens, short actions, and a clear place to look.',
         items: [
           {
-            eyebrow: 'Promises',
-            title: 'Shared promises that stay visible',
-            description: 'Recurring promises and quick wins sit in the same flow, so “we talked about it” becomes something you can actually revisit.',
+            eyebrow: 'Start here',
+            title: 'Home',
+            description: 'See today’s promises and recent logs first.',
+            highlights: ['Today', 'Points'],
             tone: 'rose',
-            screenshot: MARKETING_SCREENSHOTS[0],
+            screenshot: screens.home,
           },
           {
-            eyebrow: 'Gratitude',
-            title: 'Thank-you logs that feel personal',
-            description: 'Record gratitude in the moment and let the app keep the emotional receipts your memory usually loses.',
+            eyebrow: 'Keep promises visible',
+            title: 'Promises',
+            description: 'A simple list of what you agreed on.',
+            highlights: ['Shared list', 'Status'],
             tone: 'sky',
-            screenshot: MARKETING_SCREENSHOTS[1],
+            screenshot: screens.promises,
           },
           {
-            eyebrow: 'Calendar',
-            title: 'See the week instead of guessing it',
-            description: 'Your shared calendar view makes promises, logs, and timing easier to understand at a glance.',
+            eyebrow: 'See the week',
+            title: 'Calendar',
+            description: 'Look back by date instead of memory.',
+            highlights: ['Dates', 'Weekly flow'],
             tone: 'orange',
-            screenshot: MARKETING_SCREENSHOTS[2],
+            screenshot: screens.calendar,
           },
           {
-            eyebrow: 'Rewards',
-            title: 'Turn progress into something you both look forward to',
-            description: 'Rewards and unlocks give your routine a finish line, whether that is a treat, a date idea, or a reset conversation.',
+            eyebrow: 'Small motivation',
+            title: 'Rewards',
+            description: 'Turn steady logging into something fun.',
+            highlights: ['Points', 'Rewards'],
             tone: 'cream',
-            screenshot: MARKETING_SCREENSHOTS[3],
+            screenshot: screens.rewards,
           },
         ],
       },
       safety: {
         eyebrow: 'Safety',
-        title: 'Built for mutual use, not control',
+        title: 'Made for mutual use',
         items: [
-          { title: 'Mutual consent', description: 'The experience is designed for two people who agree to use it together.' },
-          { title: 'Pause or leave anytime', description: 'A relationship tool should never trap either person inside it.' },
-          { title: 'Delete data from settings', description: 'Account and shared records can be removed from inside the app.' },
-          { title: 'No surveillance framing', description: 'The product language and flows are intentionally designed away from monitoring.' },
+          { title: 'Mutual consent', description: 'Use it together, not on each other.' },
+          { title: 'Pause anytime', description: 'Either person can step away.' },
+          { title: 'Delete in settings', description: 'Shared records can be removed in the app.' },
         ],
-        note: 'If the app state changes before launch, keep the marketing copy aligned with the actual release state.',
+        note: 'Relationship tools should never feel like surveillance.',
       },
       faqTitle: 'Questions',
       faqs: [
-        { question: 'Is Pairlog free?', answer: 'Yes. The current launch is planned as a free iPhone app.' },
-        { question: 'Is it already live on the App Store?', answer: 'Not yet. The current state is App Store review in progress, and the main CTA is prepared for the live link once approval is complete.' },
-        { question: 'Can I start without my partner?', answer: 'Yes. You can enter first, look around, and connect later through an invite link.' },
-        { question: 'What is shared?', answer: 'The shared experience centers on promises, logs, point progress, and rewards created for the pair.' },
-        { question: 'Is Android supported?', answer: 'No. The current launch focus is iPhone.' },
+        { question: 'Is Pairlog free?', answer: 'Yes. It is planned as a free iPhone app.' },
+        { question: 'Is it live already?', answer: 'Not yet. It is still in App Store review.' },
+        { question: 'Can I start alone?', answer: 'Yes. You can invite your partner later.' },
+        { question: 'Is Android supported?', answer: 'No. The current launch is iPhone only.' },
       ],
       finalCta: {
-        title: 'Be ready to download as soon as it goes live.',
+        title: 'Ready when it goes live.',
         description: '',
         note: '',
       },
@@ -370,120 +351,96 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
     }
   }
 
+  const screens = LANDING_SCREENSHOTS.ja
+
   return {
     locale: 'ja',
     path: '/',
-    title: '責めないで、ふたりの約束と感謝を記録するiPhoneアプリ',
-    description: 'Pairlog は、カップルや夫婦の約束、ありがとう、週間の進み具合、ごほうびを記録するiPhoneアプリです。App Store公開準備中。',
+    title: 'ふたりの記録を、ひとつにするiPhoneアプリ',
+    description: 'Pairlog は、約束、ありがとう、カレンダー、ごほうびをひとつにまとめて見返せる、カップル・夫婦向けのiPhoneアプリです。App Store 公開準備中。',
     keywords: ['カップルアプリ', '夫婦アプリ', '約束アプリ', 'ありがとう 記録', '関係改善 アプリ', 'ペアアプリ', 'iPhoneアプリ'],
     languageSwitchLabel: 'English',
     languageSwitchHref: '/en',
     navLabel: 'Pairlog',
     hero: {
-      eyebrow: '責める代わりに、記録するためのアプリ',
-      title: '約束を責めずに整える。感謝も、ごほうびも、ひとつに。',
-      lead: 'Pairlog は、カップルや夫婦が「言った・言わない」で消耗しすぎないための、やさしい記録アプリです。',
-      body: '約束、ありがとう、週間の進み具合、カレンダー、ごほうびを同じ流れで扱えるので、ふたりの対話を毎回ゼロから始めずに済みます。',
+      eyebrow: 'ふたりで使う記録アプリ',
+      title: 'ふたりの記録を、ひとつに。',
+      lead: '約束、ありがとう、カレンダーを同じ場所で見返せます。',
+      body: '',
       status: 'App Store 審査中',
-      availabilityNote: 'iPhone向けの公開を準備中です。Android は現在の公開対象に含めていません。',
+      availabilityNote: 'iPhone向けに公開準備中です。',
       secondaryCta: '画面を見る',
       secondaryHref: '#showcase',
       stats: [
-        { label: 'つなぎ方', value: '招待リンク' },
-        { label: '記録', value: '1タップ' },
-        { label: 'ふり返り', value: '週間で確認' },
-        { label: '安全性', value: 'いつでも停止' },
+        { label: 'ホーム', value: '今日が見える' },
+        { label: '約束', value: '一覧で見る' },
+        { label: 'カレンダー', value: '週で見る' },
       ],
-    },
-    pain: {
-      eyebrow: 'こんな時のために',
-      title: '「わかってると思った」が、すれ違いになる前に。',
-      intro: 'Pairlog が作りたいのは、相手を採点する仕組みではありません。毎日の中で忘れやすい約束や感謝を、ふたりで静かに残していく場所です。',
-      items: [
-        '約束したのに、なんとなく流れてしまった。',
-        'ありがとうを言いたかったのに、その瞬間を逃した。',
-        '小さなズレが毎週同じように積み重なった。',
-        '必要だったのは根性ではなく、共有できる仕組みだった。',
-      ],
-      note: '「もっと覚えていて」ではなく、「一緒に残しておこう」に変えるためのアプリです。',
-    },
-    flow: {
-      eyebrow: '使い方',
-      title: '続けやすい3ステップ',
-      steps: [
-        {
-          number: '01',
-          title: 'まずはひとりで始めて、あとからつなぐ',
-          description: 'アプリの雰囲気を見てから、招待リンクでパートナーと接続できます。',
-        },
-        {
-          number: '02',
-          title: '約束と「ありがとう」のきっかけを決める',
-          description: '日常のルーティンも、その場の感謝も、同じ流れの中で扱えます。',
-        },
-        {
-          number: '03',
-          title: '記録して、ふり返って、ごほうびにつなげる',
-          description: '1タップの記録が積み上がると、週間の進み具合や解放できるごほうびが見えてきます。',
-        },
+      screenshot: screens.home,
+      screenshotAlt: 'Pairlog ホーム画面',
+      sideScreens: [
+        { src: screens.promises, alt: 'Pairlog 約束画面', label: '約束' },
+        { src: screens.calendar, alt: 'Pairlog カレンダー画面', label: 'カレンダー' },
       ],
     },
     showcase: {
-      eyebrow: 'アプリの中身',
-      title: 'やることが散らからない、あたたかい導線',
-      description: 'ダッシュボードを情報で埋めるのではなく、毎日触る面だけを丁寧に設計しています。',
+      eyebrow: '画面',
+      title: '各画面でできること',
+      description: '役割を分けているので、どこを見ればいいか迷いません。',
       items: [
         {
-          eyebrow: '約束',
-          title: 'ふたりの約束を、見失わない形に',
-          description: 'ルーティンの約束も、その時々の小さな目標も、あとで見返せる形で同じ場所に残せます。',
+          eyebrow: '最初に見る',
+          title: 'ホーム',
+          description: '今日の約束と最近の記録がすぐ見えます。',
+          highlights: ['今日の約束', 'ポイント'],
           tone: 'rose',
-          screenshot: MARKETING_SCREENSHOTS[0],
+          screenshot: screens.home,
         },
         {
-          eyebrow: 'ありがとう',
-          title: '感謝をその場で残せる',
-          description: '伝えそびれがちな「ありがとう」を、その時の気持ちごと記録して、あとからも見返せます。',
+          eyebrow: '決めたことを残す',
+          title: '約束',
+          description: 'ふたりで決めたことを一覧で確認できます。',
+          highlights: ['約束一覧', '進み具合'],
           tone: 'sky',
-          screenshot: MARKETING_SCREENSHOTS[1],
+          screenshot: screens.promises,
         },
         {
-          eyebrow: 'カレンダー',
-          title: '今週の流れを、ふたりで把握しやすい',
-          description: '約束や記録がいつ動いたかを見渡せるので、感覚だけで話さなくて済みます。',
+          eyebrow: '今週をひと目で',
+          title: 'カレンダー',
+          description: 'いつ何があったかを日付で追えます。',
+          highlights: ['日付', '週の流れ'],
           tone: 'orange',
-          screenshot: MARKETING_SCREENSHOTS[2],
+          screenshot: screens.calendar,
         },
         {
-          eyebrow: 'ごほうび',
-          title: '積み上がりが楽しみに変わる',
-          description: 'ポイントがたまったら、ごほうびや会話のきっかけを解放。続ける理由をやさしく作ります。',
+          eyebrow: '続けるきっかけ',
+          title: 'ごほうび',
+          description: 'たまった記録を次の楽しみにつなげます。',
+          highlights: ['ポイント', 'ごほうび'],
           tone: 'cream',
-          screenshot: MARKETING_SCREENSHOTS[3],
+          screenshot: screens.rewards,
         },
       ],
     },
     safety: {
-      eyebrow: 'Safety',
-      title: '監視ではなく、合意のための設計',
+      eyebrow: '安心',
+      title: 'ふたりで使う前提だけ残す',
       items: [
-        { title: 'ふたりの合意で使う', description: '一方だけが管理するためのツールにはしません。' },
-        { title: 'いつでも停止できる', description: '続けたくない時に、片方が足止めされないようにします。' },
-        { title: '設定から削除できる', description: 'アカウントや共有記録の削除導線をアプリ内に持たせています。' },
-        { title: '言葉づかいも監視寄りにしない', description: 'コピーもUIも、コントロール目的に寄せない前提で整えます。' },
+        { title: 'ふたりで使う', description: '一方が管理する道具にしません。' },
+        { title: 'いつでも止められる', description: '片方だけでも離れられます。' },
+        { title: '設定から削除できる', description: '共有記録もアプリ内で消せます。' },
       ],
-      note: 'LPの文言も、公開状態と安全方針に合わせて常に正確に保ちます。',
+      note: '監視ではなく、対話の補助として使う前提です。',
     },
     faqTitle: 'よくある質問',
     faqs: [
-      { question: '無料ですか？', answer: 'はい。現在の公開方針では、iPhone向けに無料で始められる想定です。' },
-      { question: 'もうApp Storeで公開されていますか？', answer: 'まだです。現在は App Store 審査中で、承認後にこのページのボタンがそのまま配布導線になります。' },
-      { question: 'パートナーがいなくても触れますか？', answer: 'はい。先にひとりで入り、あとから招待リンクでつなぐ流れを想定しています。' },
-      { question: '何が共有されますか？', answer: '共有の中心になるのは、約束、記録、ポイントの進み具合、ごほうびなど、ふたりで扱う情報です。' },
+      { question: '無料ですか？', answer: 'はい。iPhone向けに無料で始められる想定です。' },
+      { question: 'もう公開されていますか？', answer: 'まだです。現在は App Store 審査中です。' },
+      { question: 'ひとりでも始められますか？', answer: 'はい。あとから招待リンクでつなげられます。' },
       { question: 'Android はありますか？', answer: '現時点の公開対象は iPhone です。' },
     ],
     finalCta: {
-      title: '公開後はここからすぐ始められます。',
+      title: '公開後はここから始める。',
       description: '',
       note: '',
     },

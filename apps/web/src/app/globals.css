@@ -4,75 +4,58 @@
 
 :root {
   --brand: #ec4899;
-  --marketing-display: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif;
-  --marketing-body: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --marketing-display: 'Iowan Old Style', 'Palatino Linotype', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+  --marketing-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
   --ink: #1f1721;
-  --warm-bg: #fbf2e8;
-  --warm-panel: rgba(255, 250, 244, 0.84);
-  --warm-border: #ebd8ca;
-  --warm-muted: #6f5a50;
+  --warm-bg: #f8f3ef;
+  --warm-panel: rgba(255, 255, 255, 0.88);
+  --warm-border: #eadfdb;
+  --warm-muted: #6d5a66;
 }
 
 body {
-  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  font-family: var(--marketing-body);
   background:
-    radial-gradient(circle at top left, rgba(255, 218, 196, 0.9), transparent 32%),
-    radial-gradient(circle at 88% 12%, rgba(248, 189, 156, 0.5), transparent 26%),
-    radial-gradient(circle at 60% 100%, rgba(245, 212, 191, 0.42), transparent 28%),
-    linear-gradient(180deg, #fffaf4 0%, var(--warm-bg) 42%, #f6ebe1 100%);
+    radial-gradient(circle at top left, rgba(255, 223, 208, 0.5), transparent 28%),
+    radial-gradient(circle at 90% 12%, rgba(247, 210, 192, 0.32), transparent 22%),
+    linear-gradient(180deg, #fffdfb 0%, var(--warm-bg) 48%, #f4efec 100%);
   color: var(--ink);
 }
 
 .marketing-display {
   font-family: var(--marketing-display);
-  font-weight: 700;
 }
 
 .marketing-page {
   position: relative;
-  isolation: isolate;
   font-family: var(--marketing-body);
 }
 
-.marketing-page::before,
-.marketing-page::after {
+.marketing-page::before {
   content: '';
   position: absolute;
-  z-index: -1;
-  border-radius: 9999px;
-  filter: blur(12px);
-  opacity: 0.8;
-}
-
-.marketing-page::before {
-  left: -6rem;
-  top: 6rem;
-  height: 16rem;
-  width: 16rem;
-  background: radial-gradient(circle, rgba(255, 204, 171, 0.52) 0%, rgba(255, 204, 171, 0) 70%);
-}
-
-.marketing-page::after {
-  right: -5rem;
-  top: 22rem;
-  height: 18rem;
-  width: 18rem;
-  background: radial-gradient(circle, rgba(236, 152, 132, 0.28) 0%, rgba(236, 152, 132, 0) 70%);
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 38%);
 }
 
 .marketing-surface {
   border: 1px solid var(--warm-border);
   background: var(--warm-panel);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.72) inset,
-    0 18px 48px rgba(140, 102, 74, 0.1);
-  backdrop-filter: blur(14px);
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 18px 44px rgba(112, 88, 76, 0.08);
+  backdrop-filter: blur(12px);
 }
 
 .marketing-chip {
-  border: 1px solid rgba(210, 140, 111, 0.18);
-  background: rgba(255, 243, 233, 0.9);
-  color: #8e5443;
+  border: 1px solid #eadfda;
+  background: rgba(255, 255, 255, 0.92);
+  color: #8e5b52;
 }
 
 .marketing-button-pop {
@@ -107,9 +90,9 @@ body {
   background: var(--warm-panel);
   border: 1px solid var(--warm-border);
   box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.08),
-    0 -1px 1px rgba(255, 255, 255, 0.7) inset,
-    0 18px 35px rgba(116, 82, 102, 0.08);
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 -1px 1px rgba(255, 255, 255, 0.72) inset,
+    0 18px 35px rgba(116, 82, 102, 0.06);
   backdrop-filter: blur(12px);
 }
 
@@ -168,7 +151,7 @@ summary {
 @media (hover: hover) {
   .marketing-button-pop:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 38px rgba(140, 102, 74, 0.18);
+    box-shadow: 0 20px 38px rgba(112, 88, 76, 0.14);
   }
 }
 
