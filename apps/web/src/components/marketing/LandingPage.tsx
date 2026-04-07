@@ -11,10 +11,10 @@ import {
 } from '@/lib/marketing'
 
 const toneStyles = {
-  rose: 'from-rose-50 to-white border-rose-100',
-  orange: 'from-orange-50 to-white border-orange-100',
-  sky: 'from-sky-50 to-white border-sky-100',
-  cream: 'from-amber-50 to-white border-amber-100',
+  rose: 'border-rose-100 bg-[#fff8fb]',
+  orange: 'border-orange-100 bg-[#fffaf4]',
+  sky: 'border-sky-100 bg-[#f7fbff]',
+  cream: 'border-amber-100 bg-[#fffaf2]',
 } as const
 
 export function LandingPage({ locale }: { locale: LandingLocale }) {
@@ -52,29 +52,24 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <main lang={locale === 'ja' ? 'ja-JP' : 'en-US'} className="relative min-h-screen overflow-hidden bg-[#fff7f4] text-[#241b25]">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(circle_at_top_left,_rgba(253,164,175,0.28),_transparent_44%),radial-gradient(circle_at_top_right,_rgba(251,191,36,0.18),_transparent_34%),linear-gradient(180deg,_#fff1f2_0%,_rgba(255,247,244,0)_100%)]" />
-        <div className="pointer-events-none absolute -left-12 top-28 h-32 w-32 rounded-full bg-rose-200/40 blur-3xl" />
-        <div className="pointer-events-none absolute -right-12 top-48 h-40 w-40 rounded-full bg-orange-200/40 blur-3xl" />
-
-        <section className="relative px-4 pb-8 pt-4">
-          <div className="mb-5 flex items-center justify-between">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-rose-500 backdrop-blur">
+      <main lang={locale === 'ja' ? 'ja-JP' : 'en-US'} className="min-h-screen bg-[#fcfaf7] text-[#261b24]">
+        <div className="mx-auto max-w-6xl px-4 pb-14 pt-4 sm:px-6 lg:px-8 lg:pb-20">
+          <header className="flex items-center justify-between py-3 sm:py-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#eadfe2] bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-rose-500 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-rose-400" />
               {copy.navLabel}
             </div>
             <Link
               href={copy.languageSwitchHref}
-              className="rounded-full border border-rose-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-rose-500 backdrop-blur transition hover:border-rose-300"
+              className="rounded-full border border-[#eadfe2] bg-white px-3 py-2 text-xs font-semibold text-[#5a4957] transition hover:border-[#d8c7cf] hover:text-[#261b24]"
             >
               {copy.languageSwitchLabel}
             </Link>
-          </div>
+          </header>
 
-          <div className="relative overflow-hidden rounded-[32px] border border-white/80 bg-white/72 px-5 pb-5 pt-6 shadow-[0_24px_80px_rgba(219,39,119,0.14)] backdrop-blur">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,_rgba(255,255,255,0.86)_0%,_rgba(255,255,255,0)_100%)]" />
-            <div className="relative">
-              <div className="mb-4 flex flex-wrap items-center gap-2">
+          <section className="grid gap-10 pb-14 pt-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(340px,440px)] lg:items-center lg:gap-14 lg:pb-20 lg:pt-8">
+            <div className="max-w-2xl">
+              <div className="flex flex-wrap gap-2">
                 <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-semibold text-rose-600">
                   {copy.hero.eyebrow}
                 </span>
@@ -83,224 +78,218 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
                 </span>
               </div>
 
-              <h1 className="marketing-display max-w-[11ch] text-[2.45rem] font-semibold leading-[0.92] tracking-[-0.05em] text-[#261925]">
+              <h1 className="marketing-display mt-5 max-w-[12ch] text-[2.6rem] leading-[0.95] tracking-[-0.05em] text-[#261925] sm:text-[3.25rem] lg:max-w-none lg:text-[4.5rem]">
                 {copy.hero.title}
               </h1>
-              <p className="mt-4 text-base leading-7 text-[#5f5160]">{copy.hero.lead}</p>
-              <p className="mt-3 text-sm leading-6 text-[#766676]">{copy.hero.body}</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-[#5c4d5e] sm:text-lg">{copy.hero.lead}</p>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#7a6878] sm:text-base">{copy.hero.body}</p>
 
-              <div className="mt-6 space-y-3">
-                <StoreButton href={storeHref} badge={store.badge} label={store.button} note={store.note} />
+              <div className="mt-7 flex max-w-md flex-col gap-3">
+                <StoreButton href={storeHref} badge={store.badge} label={store.button} note={store.note} tone="dark" />
                 <Link
                   href={copy.hero.secondaryHref}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#ead6df] bg-white px-4 py-3 text-sm font-semibold text-[#4f4051] transition hover:border-[#d8b7c7]"
+                  className="inline-flex items-center gap-2 self-start text-sm font-semibold text-[#5a4957] underline decoration-[#d8c7cf] underline-offset-4 transition hover:text-[#261b24]"
                 >
                   {copy.hero.secondaryCta}
-                  <span aria-hidden="true">↓</span>
+                  <span aria-hidden="true">→</span>
                 </Link>
               </div>
 
-              <p className="mt-4 text-xs leading-5 text-[#826f7b]">{copy.hero.availabilityNote}</p>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {copy.hero.stats.map((stat) => (
+                  <div key={stat.label} className="rounded-2xl border border-[#ece2e5] bg-white px-4 py-3 shadow-sm">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#aa95a1]">{stat.label}</p>
+                    <p className="mt-1 text-sm font-semibold text-[#332534]">{stat.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-5 text-sm leading-6 text-[#7a6878]">{copy.hero.availabilityNote}</p>
             </div>
 
-            <div className="relative mt-7 h-[430px] overflow-hidden rounded-[28px] border border-[#f4dde6] bg-[linear-gradient(180deg,_#fffaf8_0%,_#fff4f1_100%)] p-3 shadow-inner">
-              <div className="absolute left-5 top-6 h-20 w-20 rounded-full bg-rose-100/70 blur-2xl" />
-              <div className="absolute bottom-10 right-6 h-24 w-24 rounded-full bg-orange-100/80 blur-2xl" />
-
-              <div className="absolute right-2 top-6 w-24 rotate-[9deg] overflow-hidden rounded-[22px] border border-white/90 bg-white shadow-[0_18px_36px_rgba(36,27,37,0.12)]">
+            <div className="relative mx-auto w-full max-w-[440px]">
+              <div className="absolute -left-2 top-16 hidden w-28 overflow-hidden rounded-[22px] border border-white bg-white shadow-[0_18px_36px_rgba(48,31,42,0.1)] sm:block lg:-left-8">
                 <Image
                   src={MARKETING_SCREENSHOTS[1]}
-                  alt="Pairlog app preview"
+                  alt="Pairlog gratitude screen"
                   width={260}
                   height={560}
-                  className="h-[180px] w-full object-cover object-top"
+                  className="h-[176px] w-full object-cover object-top"
                 />
               </div>
-
-              <div className="absolute -left-1 bottom-10 w-24 -rotate-[10deg] overflow-hidden rounded-[22px] border border-white/90 bg-white shadow-[0_18px_36px_rgba(36,27,37,0.12)]">
+              <div className="absolute -right-2 bottom-10 hidden w-32 overflow-hidden rounded-[24px] border border-white bg-white shadow-[0_18px_36px_rgba(48,31,42,0.1)] sm:block lg:-right-8">
                 <Image
                   src={MARKETING_SCREENSHOTS[2]}
-                  alt="Pairlog app preview"
+                  alt="Pairlog calendar screen"
                   width={260}
                   height={560}
-                  className="h-[180px] w-full object-cover object-top"
+                  className="h-[196px] w-full object-cover object-top"
                 />
               </div>
-
-              <div className="relative mx-auto h-full w-[220px] overflow-hidden rounded-[34px] border border-[#e9dde2] bg-white p-2 shadow-[0_28px_58px_rgba(36,27,37,0.16)]">
-                <div className="mb-2 flex justify-center">
-                  <div className="h-1.5 w-16 rounded-full bg-[#ece0e5]" />
-                </div>
-                <div className="relative h-[372px] overflow-hidden rounded-[26px] bg-[#fff5f7]">
-                  <Image
-                    src={MARKETING_SCREENSHOTS[0]}
-                    alt="Pairlog hero screen"
-                    fill
-                    priority
-                    sizes="220px"
-                    className="object-cover object-top"
-                  />
+              <div className="rounded-[34px] border border-[#e9dfe2] bg-white p-4 shadow-[0_24px_60px_rgba(56,35,48,0.12)]">
+                <div className="mx-auto w-full max-w-[290px] rounded-[34px] bg-[#181319] p-3 shadow-[0_16px_32px_rgba(24,19,25,0.28)]">
+                  <div className="mb-2 flex justify-center">
+                    <div className="h-1.5 w-16 rounded-full bg-white/15" />
+                  </div>
+                  <div className="overflow-hidden rounded-[26px] bg-[#fff5f7]">
+                    <Image
+                      src={MARKETING_SCREENSHOTS[0]}
+                      alt="Pairlog home screen"
+                      width={1290}
+                      height={2796}
+                      priority
+                      sizes="(max-width: 1024px) 70vw, 340px"
+                      className="h-[460px] w-full object-cover object-top sm:h-[540px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+          </section>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {copy.hero.stats.map((stat) => (
-                <div key={stat.label} className="rounded-[22px] border border-white/80 bg-white/80 px-4 py-3">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#aa8f9f]">{stat.label}</p>
-                  <p className="mt-1 text-sm font-semibold text-[#372a38]">{stat.value}</p>
-                </div>
-              ))}
+          <section className="border-t border-[#eee3e4] py-12 lg:py-16">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.pain.eyebrow}</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925] sm:text-[2.4rem]">
+                {copy.pain.title}
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-[#665668] sm:text-base">{copy.pain.intro}</p>
             </div>
-          </div>
-        </section>
 
-        <section className="relative px-4 pb-6">
-          <div className="rounded-[30px] border border-[#f2dfe6] bg-white px-5 py-6 shadow-[0_14px_44px_rgba(219,39,119,0.08)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.pain.eyebrow}</p>
-            <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
-              {copy.pain.title}
-            </h2>
-            <p className="mt-4 text-sm leading-6 text-[#665668]">{copy.pain.intro}</p>
-
-            <div className="mt-5 space-y-3">
+            <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {copy.pain.items.map((item) => (
-                <div key={item} className="rounded-[22px] bg-[#fff7f8] px-4 py-4">
+                <div key={item} className="rounded-[26px] border border-[#ece2e5] bg-white px-5 py-5 shadow-sm">
                   <p className="text-sm leading-6 text-[#5c4d5e]">{item}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 rounded-[24px] bg-[linear-gradient(135deg,_#fff1f4_0%,_#fff8ef_100%)] px-4 py-4">
+            <div className="mt-5 rounded-[26px] border border-[#f1e2e6] bg-[#fff7f8] px-5 py-4">
               <p className="text-sm font-semibold leading-6 text-[#6a3553]">{copy.pain.note}</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="relative px-4 pb-6">
-          <div className="overflow-hidden rounded-[30px] bg-[#241824] px-5 py-6 text-white shadow-[0_20px_54px_rgba(36,24,36,0.24)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-200">{copy.flow.eyebrow}</p>
-            <h2 className="marketing-display mt-3 text-[1.95rem] leading-[1] tracking-[-0.04em] text-white">
-              {copy.flow.title}
-            </h2>
-            <div className="mt-5 space-y-4">
-              {copy.flow.steps.map((step) => (
-                <div key={step.number} className="rounded-[24px] border border-white/10 bg-white/5 px-4 py-4">
-                  <div className="mb-3 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-rose-100">
-                      {step.number}
+          <section id="showcase" className="border-t border-[#eee3e4] py-12 lg:py-16">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.showcase.eyebrow}</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925] sm:text-[2.4rem]">
+                {copy.showcase.title}
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-[#665668] sm:text-base">{copy.showcase.description}</p>
+            </div>
+
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              {copy.showcase.items.map((item) => (
+                <article
+                  key={item.title}
+                  className={`rounded-[30px] border p-5 shadow-[0_14px_40px_rgba(56,35,48,0.07)] ${toneStyles[item.tone]}`}
+                >
+                  <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_220px] md:items-center">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b87490]">{item.eyebrow}</p>
+                      <h3 className="marketing-display mt-3 text-[1.7rem] leading-[1.04] tracking-[-0.04em] text-[#2b1f2c]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-6 text-[#5f4e60]">{item.description}</p>
                     </div>
-                    <p className="text-base font-semibold text-white">{step.title}</p>
+                    <div className="overflow-hidden rounded-[24px] border border-white/90 bg-white shadow-[0_14px_28px_rgba(36,27,37,0.08)]">
+                      <Image
+                        src={item.screenshot}
+                        alt={`${item.title} preview`}
+                        width={1290}
+                        height={2796}
+                        sizes="(max-width: 768px) 100vw, 220px"
+                        className="h-[280px] w-full object-cover object-top md:h-[320px]"
+                      />
+                    </div>
                   </div>
-                  <p className="text-sm leading-6 text-rose-50/80">{step.description}</p>
-                </div>
+                </article>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section id="showcase" className="relative scroll-mt-6 px-4 pb-6">
-          <div className="mb-4 px-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.showcase.eyebrow}</p>
-            <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
-              {copy.showcase.title}
-            </h2>
-            <p className="mt-4 text-sm leading-6 text-[#665668]">{copy.showcase.description}</p>
-          </div>
-
-          <div className="space-y-4">
-            {copy.showcase.items.map((item) => (
-              <article
-                key={item.title}
-                className={`overflow-hidden rounded-[30px] border bg-gradient-to-br ${toneStyles[item.tone]} shadow-[0_14px_44px_rgba(219,39,119,0.08)]`}
-              >
-                <div className="px-5 pt-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b87490]">{item.eyebrow}</p>
-                  <h3 className="marketing-display mt-3 text-[1.65rem] leading-[1.02] tracking-[-0.04em] text-[#2b1f2c]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 pb-5 text-sm leading-6 text-[#5f4e60]">{item.description}</p>
-                </div>
-                <div className="relative mx-4 mb-4 overflow-hidden rounded-[26px] border border-white/90 bg-white shadow-[0_18px_36px_rgba(36,27,37,0.1)]">
-                  <Image
-                    src={item.screenshot}
-                    alt={`${item.title} preview`}
-                    width={1290}
-                    height={2796}
-                    sizes="(max-width: 768px) 100vw, 430px"
-                    className="h-[320px] w-full object-cover object-top"
-                  />
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="relative px-4 pb-6">
-          <div className="rounded-[30px] border border-[#f2dfe6] bg-white px-5 py-6 shadow-[0_14px_44px_rgba(219,39,119,0.08)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.safety.eyebrow}</p>
-            <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
-              {copy.safety.title}
-            </h2>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              {copy.safety.items.map((item) => (
-                <div key={item.title} className="rounded-[22px] bg-[#fff7f8] px-4 py-4">
-                  <p className="text-sm font-semibold text-[#332534]">{item.title}</p>
-                  <p className="mt-2 text-xs leading-5 text-[#766676]">{item.description}</p>
-                </div>
-              ))}
+          <section className="grid gap-6 border-t border-[#eee3e4] py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:py-16">
+            <div className="rounded-[30px] bg-[#231824] px-5 py-6 text-white shadow-[0_20px_54px_rgba(36,24,36,0.24)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-200">{copy.flow.eyebrow}</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-white">
+                {copy.flow.title}
+              </h2>
+              <div className="mt-6 space-y-4">
+                {copy.flow.steps.map((step) => (
+                  <div key={step.number} className="rounded-[24px] border border-white/10 bg-white/5 px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-rose-100">
+                        {step.number}
+                      </div>
+                      <p className="text-base font-semibold text-white">{step.title}</p>
+                    </div>
+                    <p className="mt-3 text-sm leading-6 text-rose-50/80">{step.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="mt-4 text-xs leading-5 text-[#8a7684]">{copy.safety.note}</p>
-          </div>
-        </section>
 
-        <section className="relative px-4 pb-6">
-          <div className="rounded-[30px] border border-[#f2dfe6] bg-white px-5 py-6 shadow-[0_14px_44px_rgba(219,39,119,0.08)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">FAQ</p>
-            <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
-              {copy.faqTitle}
-            </h2>
-            <div className="marketing-faq mt-5 space-y-3">
-              {copy.faqs.map((faq) => (
-                <details key={faq.question} className="group rounded-[22px] border border-[#f3e4ea] bg-[#fffafa] px-4 py-1">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4">
-                    <span className="text-sm font-semibold text-[#382a39]">{faq.question}</span>
-                    <span className="text-lg font-semibold text-rose-400 transition group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="border-t border-[#f3e4ea] pb-4 pt-4 text-sm leading-6 text-[#6d5d6e]">{faq.answer}</p>
-                </details>
-              ))}
+            <div className="rounded-[30px] border border-[#ece2e5] bg-white px-5 py-6 shadow-[0_14px_40px_rgba(56,35,48,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">{copy.safety.eyebrow}</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
+                {copy.safety.title}
+              </h2>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {copy.safety.items.map((item) => (
+                  <div key={item.title} className="rounded-[22px] bg-[#faf6f7] px-4 py-4">
+                    <p className="text-sm font-semibold text-[#332534]">{item.title}</p>
+                    <p className="mt-2 text-sm leading-6 text-[#766676]">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-sm leading-6 text-[#7a6878]">{copy.safety.note}</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="relative px-4 pb-7">
-          <div className="overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,_#9d174d_0%,_#ec4899_42%,_#fb923c_100%)] px-5 py-6 text-white shadow-[0_22px_60px_rgba(157,23,77,0.28)]">
-            <div className="pointer-events-none absolute right-[-10px] top-6 h-32 w-32 rounded-full bg-white/10 blur-3xl" />
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-100">App Store</p>
-            <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-white">
-              {copy.finalCta.title}
-            </h2>
-            <p className="mt-4 text-sm leading-6 text-white/80">{copy.finalCta.description}</p>
-            <div className="mt-5">
-              <StoreButton href={storeHref} badge={store.badge} label={store.button} note={copy.finalCta.note} invert />
+          <section className="grid gap-6 border-t border-[#eee3e4] py-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:py-16">
+            <div className="rounded-[30px] border border-[#ece2e5] bg-white px-5 py-6 shadow-[0_14px_40px_rgba(56,35,48,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-400">FAQ</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
+                {copy.faqTitle}
+              </h2>
+              <div className="marketing-faq mt-6 space-y-3">
+                {copy.faqs.map((faq) => (
+                  <details key={faq.question} className="group rounded-[22px] border border-[#f0e4e8] bg-[#fffdfd] px-4 py-1">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4">
+                      <span className="text-sm font-semibold text-[#382a39]">{faq.question}</span>
+                      <span className="text-lg font-semibold text-rose-400 transition group-open:rotate-45">+</span>
+                    </summary>
+                    <p className="border-t border-[#f0e4e8] pb-4 pt-4 text-sm leading-6 text-[#6d5d6e]">{faq.answer}</p>
+                  </details>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
 
-        <footer className="px-4 pb-10 text-center">
-          <div className="rounded-[26px] border border-white/80 bg-white/80 px-4 py-5 shadow-[0_10px_30px_rgba(219,39,119,0.06)]">
-            <Link href={copy.languageSwitchHref} className="text-xs font-semibold text-[#816d79] underline underline-offset-4">
-              {copy.languageSwitchLabel}
-            </Link>
-            <div className="mt-3">
-              <Link href="/privacy" className="text-xs text-[#816d79] underline underline-offset-4">
-                {copy.footerPrivacy}
-              </Link>
+            <div className="rounded-[30px] bg-[linear-gradient(145deg,_#9d174d_0%,_#e4488f_52%,_#fb923c_100%)] px-5 py-6 text-white shadow-[0_22px_60px_rgba(157,23,77,0.28)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-100">App Store</p>
+              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-white">
+                {copy.finalCta.title}
+              </h2>
+              <div className="mt-6">
+                <StoreButton href={storeHref} badge={store.badge} label={store.button} tone="light" />
+              </div>
             </div>
-            <p className="mt-3 text-xs text-[#a18e99]">© 2026 Pairlog</p>
-          </div>
-        </footer>
+          </section>
+
+          <footer className="border-t border-[#eee3e4] py-8">
+            <div className="flex flex-col items-start justify-between gap-3 text-sm text-[#7f6d79] sm:flex-row sm:items-center">
+              <div className="flex flex-wrap items-center gap-4">
+                <Link href={copy.languageSwitchHref} className="font-semibold text-[#5a4957] underline underline-offset-4">
+                  {copy.languageSwitchLabel}
+                </Link>
+                <Link href="/privacy" className="underline underline-offset-4">
+                  {copy.footerPrivacy}
+                </Link>
+              </div>
+              <p className="text-xs text-[#a18e99]">© 2026 Pairlog</p>
+            </div>
+          </footer>
+        </div>
       </main>
     </>
   )
@@ -311,19 +300,39 @@ function StoreButton({
   badge,
   label,
   note,
-  invert = false,
+  tone = 'dark',
 }: {
   href: string
   badge: string
   label: string
-  note: string
-  invert?: boolean
+  note?: string
+  tone?: 'dark' | 'light'
 }) {
-  const baseClass = invert
-    ? 'border-white/30 bg-white text-[#8d2051]'
-    : 'border-[#eed7df] bg-white text-[#8d2051]'
+  const classes =
+    tone === 'dark'
+      ? {
+          root: 'border-[#261925] bg-[#261925] text-white hover:bg-[#342434]',
+          badge: 'text-rose-100/85',
+          note: 'text-white/70',
+        }
+      : {
+          root: 'border-white/25 bg-white text-[#8d2051] hover:bg-[#fff7fb]',
+          badge: 'text-[#d94f8c]',
+          note: 'text-[#7d6975]',
+        }
 
-  const noteClass = invert ? 'text-white/80' : 'text-[#7d6975]'
+  const content = (
+    <>
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className={`text-[11px] font-semibold uppercase tracking-[0.2em] ${classes.badge}`}>{badge}</p>
+          <p className="mt-1 text-base font-semibold leading-6">{label}</p>
+        </div>
+        <AppleIcon />
+      </div>
+      {note ? <p className={`mt-2 text-xs leading-5 ${classes.note}`}>{note}</p> : null}
+    </>
+  )
 
   if (APP_STORE.status === 'live') {
     return (
@@ -331,16 +340,9 @@ function StoreButton({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`marketing-shine block rounded-[28px] border px-4 py-4 shadow-[0_16px_32px_rgba(157,23,77,0.14)] ${baseClass}`}
+        className={`block rounded-[28px] border px-4 py-4 shadow-[0_16px_32px_rgba(72,39,58,0.14)] transition ${classes.root}`}
       >
-        <div className="flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d94f8c]">{badge}</p>
-            <p className="mt-1 text-base font-semibold leading-6">{label}</p>
-          </div>
-          <AppleIcon />
-        </div>
-        <p className={`mt-2 text-xs leading-5 ${noteClass}`}>{note}</p>
+        {content}
       </a>
     )
   }
@@ -348,16 +350,9 @@ function StoreButton({
   return (
     <Link
       href={href}
-      className={`block rounded-[28px] border px-4 py-4 shadow-[0_16px_32px_rgba(157,23,77,0.14)] ${baseClass}`}
+      className={`block rounded-[28px] border px-4 py-4 shadow-[0_16px_32px_rgba(72,39,58,0.14)] transition ${classes.root}`}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d94f8c]">{badge}</p>
-          <p className="mt-1 text-base font-semibold leading-6">{label}</p>
-        </div>
-        <AppleIcon />
-      </div>
-      <p className={`mt-2 text-xs leading-5 ${noteClass}`}>{note}</p>
+      {content}
     </Link>
   )
 }

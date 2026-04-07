@@ -8,7 +8,7 @@ import { createAnonymousUser, createCouple, joinCouple, getToken, getUserId } fr
 export default function PairPage() {
   const router = useRouter()
   const params = useSearchParams()
-  const inviteCode = params.get('code')
+  const inviteCode = params?.get('code')
 
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>(inviteCode ? 'join' : 'choose')
   const [displayName, setDisplayName] = useState('')

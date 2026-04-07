@@ -129,10 +129,10 @@ export default function RulesPage() {
       </div>
       <p className="text-sm text-gray-600 mb-4">{messages.rule.box_desc}</p>
 
-      {rules.length < 3 && (
+      {rules.length < 5 && (
         <p className="text-xs text-gray-500 mb-4">{messages.rule.count_hint.replace('{count}', String(rules.length))}</p>
       )}
-      {rules.length >= 3 && (
+      {rules.length >= 5 && (
         <p className="text-xs text-orange-600 mb-4">{messages.rule.limit}</p>
       )}
 
@@ -169,7 +169,7 @@ export default function RulesPage() {
       {!showForm ? (
         <button
           onClick={() => setShowForm(true)}
-          disabled={rules.length >= 3}
+          disabled={rules.length >= 5}
           className="w-full rounded-2xl border-2 border-dashed border-brand-300 py-3 text-sm font-semibold text-brand-600 disabled:opacity-40"
         >
           {messages.rule.add_box}

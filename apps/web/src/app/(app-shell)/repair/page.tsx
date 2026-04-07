@@ -130,7 +130,7 @@ export default function UnlockPage() {
 
       <div className="mb-4" />
 
-      {/* のびしろ解放追加 */}
+      {/* 約束ポイント解放追加 */}
       <UnlockSection
         kind="nobishiro"
         label={messages.unlock.add_nobishiro}

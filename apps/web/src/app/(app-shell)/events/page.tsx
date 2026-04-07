@@ -17,7 +17,7 @@ type RuleWithMeta = Rule & {
 export default function EventPage() {
   const router = useRouter()
   const params = useSearchParams()
-  const actionFromQuery = params.get('action') === 'nobishiro' ? 'nobishiro' : 'thank_you'
+  const actionFromQuery = params?.get('action') === 'nobishiro' ? 'nobishiro' : 'thank_you'
 
   const [rules, setRules] = useState<RuleWithMeta[]>([])
   const [loading, setLoading] = useState(false)

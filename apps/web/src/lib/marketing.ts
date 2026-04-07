@@ -146,7 +146,7 @@ export function getStoreMeta(locale: LandingLocale) {
       : {
           badge: 'App Store 審査中',
           button: 'App Storeでまもなく公開',
-          note: '審査通過後、このボタンがそのままダウンロード導線になります。',
+          note: '現在は審査中です。',
         }
   }
 
@@ -159,7 +159,7 @@ export function getStoreMeta(locale: LandingLocale) {
     : {
         badge: 'App Store review in progress',
         button: 'Coming soon to the App Store',
-        note: 'Once approved, this button becomes the live download link.',
+        note: 'Currently under review.',
       }
 }
 
@@ -362,9 +362,9 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         { question: 'Is Android supported?', answer: 'No. The current launch focus is iPhone.' },
       ],
       finalCta: {
-        title: 'Keep the first download path obvious from day one.',
-        description: 'This page is already structured so the App Store CTA can switch from “coming soon” to “download now” without another redesign.',
-        note: 'Japanese and English stay aligned on the same structure.',
+        title: 'Be ready to download as soon as it goes live.',
+        description: '',
+        note: '',
       },
       footerPrivacy: 'Privacy Policy',
     }
@@ -483,9 +483,9 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       { question: 'Android はありますか？', answer: '現時点の公開対象は iPhone です。' },
     ],
     finalCta: {
-      title: '公開前でも、ダウンロード導線は最初から目立つ位置に。',
-      description: 'いまは「審査中」と正確に見せつつ、承認後は状態フラグを切り替えるだけでそのまま公開導線に移れます。',
-      note: '日本語と英語で同じ構成を維持します。',
+      title: '公開後はここからすぐ始められます。',
+      description: '',
+      note: '',
     },
     footerPrivacy: 'プライバシーポリシー',
   }
