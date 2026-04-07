@@ -1,15 +1,3 @@
-<claude-mem-context>
-# Recent Activity
-
-### Mar 10, 2026
-
-| ID | Time | T | Title | Read |
-|----|------|---|-------|------|
-| #136 | 2:38 AM | ✅ | Created root package.json with pnpm workspace scripts and database management commands | ~558 |
-
-### Mar 11, 2026
-
-| ID | Time | T | Title | Read |
-|----|------|---|-------|------|
-| #153 | 3:44 AM | 🟣 | Futari no Yakusoku MVP Implementation Complete | ~485 |
-</claude-mem-context>
+## Pairlog 固有のセキュリティルール
+- **カップルIDの境界を必ず守る** — APIは自分のカップルIDと一致するデータだけを返す。他カップルのデータを絶対に混入させない
+- **ペアリング解除は封じない** — パートナーの同意なしでも解除できる設計にする（DVなどの安全上の理由）

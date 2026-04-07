@@ -1,134 +1,121 @@
-# Cloudflare デプロイ手順
+# Pairlog Cloudflare Deploy
 
-## 構成
+## Current production shape
 
+```text
+Cloudflare Pages   <- Web
+Cloudflare Workers <- Hono API
+Cloudflare D1      <- Primary DB
 ```
-Cloudflare Pages  ← Next.js (web)
-Cloudflare Workers ← Hono API (api)
-Neon              ← PostgreSQL (DB)
+
+`apps/api/wrangler.toml` binds the production D1 database as `pairlog-db`.
+
+## What changed in this session
+
+The API now tolerates an older `rules` table for read paths and event recording, but the full rule feature set still depends on the latest D1 columns being present.
+
+That means:
+
+1. Home / rules / calendar should stop failing with a 500 as soon as the Worker is redeployed.
+2. New rule scheduling, assignee/recorder, and reminder fields are only fully usable after the pending D1 SQL migrations are applied.
+
+## Safe deploy order
+
+Always use this order when rule schema changes are involved:
+
+1. Apply the pending D1 SQL migrations in timestamp order.
+2. Redeploy the Worker.
+
+Do not reverse the order. A new Worker against an older D1 schema is exactly the mismatch that caused the recent failures.
+
+## Pre-deploy verification
+
+From the repo root:
+
+```bash
+pnpm --filter @fny/api exec tsc --noEmit
+pnpm --filter @fny/api test
 ```
 
----
+## D1 migration apply
 
-## 1. Neon（DB）セットアップ
+This repo keeps the SQL source of truth in `packages/db/prisma/migrations/*/migration.sql`.
 
-1. https://neon.tech にサインアップ（無料）
-2. プロジェクト作成 → `futari-no-yakusoku`
-3. リージョン: `AWS ap-northeast-1`（東京）推奨
-4. Connection string をコピー:
-   ```
-   postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require
-   ```
-5. マイグレーション実行:
-   ```bash
-   DATABASE_URL="<neon接続文字列>" node_modules/.bin/prisma migrate deploy \
-     --schema packages/db/prisma/schema.prisma
-   ```
-6. シードデータ投入:
-   ```bash
-   DATABASE_URL="<neon接続文字列>" pnpm db:seed
-   ```
-
----
-
-## 2. Cloudflare Workers（API）デプロイ
+From `apps/api`, apply any production migrations that have not yet been run on D1, in chronological order:
 
 ```bash
 cd apps/api
-
-# wrangler ログイン（初回のみ）
-npx wrangler login
-
-# Secrets 設定（ダッシュボードには保存されない）
-npx wrangler secret put DATABASE_URL
-# → neon接続文字列を入力
-
-npx wrangler secret put JWT_SECRET
-# → openssl rand -base64 32 で生成した文字列を入力
-
-# デプロイ
-npx wrangler deploy --config wrangler.toml
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260319183032_add_reminder_fields/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260319190157_nullable_trigger_event_id/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260320000000_nullable_trigger_event_id/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260322000000_add_email_auth/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260322020000_add_rule_category/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260322154000_add_rule_start_date/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260322193000_add_rule_schedule_structure/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260323000000_add_password_reset_tokens/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260323200000_add_rule_assignee_recorder/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260330182000_add_user_token_version/migration.sql
+npx wrangler d1 execute pairlog-db --remote --file ../../packages/db/prisma/migrations/20260331013000_fix_point_ledger_unique_index/migration.sql
 ```
 
-デプロイ後のURL例: `https://futari-no-yakusoku-api.<account>.workers.dev`
+If production is already partway through that list, skip the migrations that are already reflected in D1 and continue from the first missing one.
 
----
+At minimum, the recent rule-related mismatch can involve these files:
 
-## 3. Cloudflare Pages（Web）デプロイ
+- `20260319183032_add_reminder_fields`
+- `20260322020000_add_rule_category`
+- `20260322154000_add_rule_start_date`
+- `20260322193000_add_rule_schedule_structure`
+- `20260323200000_add_rule_assignee_recorder`
+- `20260330182000_add_user_token_version`
+- `20260331013000_fix_point_ledger_unique_index`
 
-### 方法A: GitHub連携（推奨）
+## Worker deploy
 
-1. GitHubリポジトリをpush
-2. Cloudflare Pages ダッシュボード → 「Create application」
-3. 設定:
-   ```
-   Framework preset:   Next.js
-   Build command:      npx @cloudflare/next-on-pages@1
-   Build output dir:   .vercel/output/static
-   Root directory:     apps/web
-   ```
-4. 環境変数を追加:
-   ```
-   NEXT_PUBLIC_API_URL = https://futari-no-yakusoku-api.<account>.workers.dev/api/v1
-   NEXT_PUBLIC_APP_URL = https://futari-no-yakusoku.pages.dev
-   CF_PAGES = 1
-   ```
-
-### 方法B: CLI
+After D1 is updated:
 
 ```bash
-cd apps/web
-
-# ビルド
-npx @cloudflare/next-on-pages@1
-
-# デプロイ
-npx wrangler pages deploy .vercel/output/static \
-  --project-name futari-no-yakusoku
+pnpm --filter @fny/api deploy
 ```
 
----
-
-## 4. 完了確認
+Equivalent direct command:
 
 ```bash
-# API ヘルスチェック
-curl https://futari-no-yakusoku-api.<account>.workers.dev/api/v1/health
-# → {"ok":true}
-
-# Web アクセス
-open https://futari-no-yakusoku.pages.dev
+cd apps/api
+npx wrangler deploy
 ```
 
----
+## When deploy is enough
 
-## 費用試算（無料枠）
+Worker redeploy only is enough when:
 
-| サービス | 無料枠 | 月額目安 |
-|---------|-------|---------|
-| Cloudflare Workers | 100,000 req/日 | $0 |
-| Cloudflare Pages | 500ビルド/月, 無制限帯域 | $0 |
-| Neon PostgreSQL | 0.5GB, 190時間/月 | $0 |
-| **合計** | | **$0** |
+- the fix is API logic only
+- D1 already has every required column
 
-> MVPフェーズでは完全無料で運用可能。ユーザー数が増えた場合の目安: Workers Paid $5/月、Neon Pro $19/月。
+This session's compatibility patch is in that category for read stability. It reduces 500s even before D1 is updated.
 
----
+## When D1 is still required
 
-## トラブルシューティング
+D1 migration apply is still required when you want the latest rule fields to persist correctly:
 
-### `prisma generate` がWorkers上で失敗する
-→ `packages/db/prisma/schema.prisma` の `generator client` に以下を追加:
-```prisma
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
-}
-```
-→ `@prisma/adapter-neon` が自動で使われる
+- `start_date`
+- `category`
+- `creator_user_id`
+- `assignee`
+- `recorder`
+- `recurrence_type`
+- `recurrence_interval`
+- `days_of_week`
+- `day_of_month`
+- `time_of_day`
+- `reminder_enabled`
+- `reminder_time`
 
-### CORS エラー
-→ `apps/api/wrangler.toml` の `[vars]` の `WEB_URL` がPagesのURLと一致しているか確認
+Without those columns, the API now fails safely instead of crashing, but the latest rule configuration cannot be fully saved.
 
-### JWT 検証失敗
-→ WorkerとPagesで同じ `JWT_SECRET` を使っているか確認
+## Post-deploy checks
+
+1. Open the home screen and confirm the red error card is gone.
+2. Open promises and calendar and confirm the list loads.
+3. Tap a rule record action once and confirm it no longer fails with a server error.
+4. Create or edit a rule that uses schedule/reminder/assignee fields only after D1 migrations are confirmed applied.

@@ -1,0 +1,12 @@
+{
+  "name": "appstore-screenshot-generator",
+  "version": "1.0.0",
+  "description": "Pairlog App Store screenshot generator",
+  "main": "generate.js",
+  "scripts": {
+    "generate": "node generate.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.67"
+  }
+}
