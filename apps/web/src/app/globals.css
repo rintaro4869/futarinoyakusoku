@@ -4,8 +4,8 @@
 
 :root {
   --brand: #ec4899;
-  --marketing-display: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Nunito', 'Trebuchet MS', sans-serif;
-  --marketing-body: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --marketing-display: 'Avenir Next', 'SF Pro Display', 'Hiragino Sans', 'Avenir Next Rounded', 'SF Pro Rounded', 'Noto Sans JP', sans-serif;
+  --marketing-body: 'Avenir Next', 'SF Pro Text', 'Hiragino Sans', 'Avenir Next Rounded', 'SF Pro Rounded', 'Noto Sans JP', sans-serif;
   --ink: #1f1721;
   --warm-bg: #f8f3ef;
   --warm-panel: rgba(255, 255, 255, 0.88);
@@ -24,7 +24,7 @@ body {
 
 .marketing-display {
   font-family: var(--marketing-display);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .marketing-page {
