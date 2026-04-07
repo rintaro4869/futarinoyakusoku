@@ -16,7 +16,7 @@ describe('ja-JP copy', () => {
 
   it('errors match error-codes.v1.json', async () => {
     const copy = await import('../../public/locales/ja-JP.json')
-    expect(copy.errors.RULE_LIMIT_REACHED).toBe('ルール上限に達しています（最大3件）')
+    expect(copy.errors.RULE_LIMIT_REACHED).toBe('ルール上限に達しています（最大5件）')
     expect(copy.errors.INVITE_EXPIRED).toBe('招待コードの有効期限が切れています')
     expect(copy.errors.COUPLE_LOCKED).toBe('現在このペアは加点停止中です')
   })
