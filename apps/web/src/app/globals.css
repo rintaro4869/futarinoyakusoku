@@ -4,8 +4,8 @@
 
 :root {
   --brand: #ec4899;
-  --marketing-display: 'Iowan Old Style', 'Palatino Linotype', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
-  --marketing-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  --marketing-display: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Nunito', 'Trebuchet MS', sans-serif;
+  --marketing-body: 'Avenir Next Rounded', 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   --ink: #1f1721;
   --warm-bg: #f8f3ef;
   --warm-panel: rgba(255, 255, 255, 0.88);
@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: var(--marketing-body);
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
   background:
     radial-gradient(circle at top left, rgba(255, 223, 208, 0.5), transparent 28%),
     radial-gradient(circle at 90% 12%, rgba(247, 210, 192, 0.32), transparent 22%),
@@ -24,6 +24,7 @@ body {
 
 .marketing-display {
   font-family: var(--marketing-display);
+  font-weight: 700;
 }
 
 .marketing-page {

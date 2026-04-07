@@ -55,7 +55,6 @@ export type LandingCopy = {
     stats: { label: string; value: string }[]
     screenshot: string
     screenshotAlt: string
-    sideScreens: { src: string; alt: string; label: string }[]
   }
   showcase: {
     eyebrow: string
@@ -281,10 +280,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         ],
         screenshot: screens.home,
         screenshotAlt: 'Pairlog home screen',
-        sideScreens: [
-          { src: screens.promises, alt: 'Pairlog promises screen', label: 'Promises' },
-          { src: screens.calendar, alt: 'Pairlog calendar screen', label: 'Calendar' },
-        ],
       },
       showcase: {
         eyebrow: 'Screens',
@@ -378,10 +373,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       ],
       screenshot: screens.home,
       screenshotAlt: 'Pairlog ホーム画面',
-      sideScreens: [
-        { src: screens.promises, alt: 'Pairlog 約束画面', label: '約束' },
-        { src: screens.calendar, alt: 'Pairlog カレンダー画面', label: 'カレンダー' },
-      ],
     },
     showcase: {
       eyebrow: '画面',

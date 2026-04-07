@@ -113,29 +113,7 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
               <p className="mt-5 text-sm leading-6 text-[#776873]">{copy.hero.availabilityNote}</p>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[440px]">
-              {copy.hero.sideScreens[0] ? (
-                <div className="absolute -left-2 top-16 hidden w-28 overflow-hidden rounded-[24px] border border-white bg-white shadow-[0_18px_36px_rgba(48,31,42,0.08)] sm:block lg:-left-6">
-                  <Image
-                    src={copy.hero.sideScreens[0].src}
-                    alt={copy.hero.sideScreens[0].alt}
-                    width={260}
-                    height={560}
-                    className="h-[176px] w-full object-cover object-top"
-                  />
-                </div>
-              ) : null}
-              {copy.hero.sideScreens[1] ? (
-                <div className="absolute -right-2 bottom-10 hidden w-32 overflow-hidden rounded-[24px] border border-white bg-white shadow-[0_18px_36px_rgba(48,31,42,0.08)] sm:block lg:-right-6">
-                  <Image
-                    src={copy.hero.sideScreens[1].src}
-                    alt={copy.hero.sideScreens[1].alt}
-                    width={260}
-                    height={560}
-                    className="h-[196px] w-full object-cover object-top"
-                  />
-                </div>
-              ) : null}
+            <div className="mx-auto w-full max-w-[440px]">
               <div className="marketing-card rounded-[34px] p-4">
                 <div className="overflow-hidden rounded-[28px] border border-white bg-white shadow-[0_22px_44px_rgba(56,35,48,0.1)]">
                   <Image
