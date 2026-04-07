@@ -101,15 +101,6 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
                 </Link>
               </div>
 
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {copy.hero.stats.map((stat) => (
-                  <div key={stat.label} className="rounded-[22px] border border-[#ece2e5] bg-white px-4 py-3 shadow-sm">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#a58f9a]">{stat.label}</p>
-                    <p className="mt-1 text-sm font-semibold text-[#322432]">{stat.value}</p>
-                  </div>
-                ))}
-              </div>
-
               <p className="mt-5 text-sm leading-6 text-[#776873]">{copy.hero.availabilityNote}</p>
             </div>
 
@@ -179,23 +170,7 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
             </div>
           </section>
 
-          <section className="grid gap-6 border-t border-[#eee4e5] py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:py-16">
-            <div className="rounded-[30px] border border-[#ece2e5] bg-white px-5 py-6 shadow-[0_14px_40px_rgba(56,35,48,0.06)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b66c7c]">{copy.safety.eyebrow}</p>
-              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
-                {copy.safety.title}
-              </h2>
-              <div className="mt-6 space-y-3">
-                {copy.safety.items.map((item) => (
-                  <div key={item.title} className="rounded-[22px] bg-[#faf7f8] px-4 py-4">
-                    <p className="text-sm font-semibold text-[#322432]">{item.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-[#746672]">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-5 text-sm leading-6 text-[#7b6c78]">{copy.safety.note}</p>
-            </div>
-
+          <section className="border-t border-[#eee4e5] py-12 lg:py-16">
             <div className="rounded-[30px] border border-[#ece2e5] bg-white px-5 py-6 shadow-[0_14px_40px_rgba(56,35,48,0.06)]">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b66c7c]">FAQ</p>
               <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925]">
@@ -211,18 +186,6 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
                     <p className="border-t border-[#f1e6ea] pb-4 pt-4 text-sm leading-6 text-[#675862]">{faq.answer}</p>
                   </details>
                 ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="border-t border-[#eee4e5] py-12 lg:py-16">
-            <div className="rounded-[30px] border border-[#ead8d3] bg-[linear-gradient(180deg,#fffaf6_0%,#fff2ea_100%)] px-5 py-6 shadow-[0_20px_54px_rgba(140,98,78,0.08)] sm:px-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c06b59]">App Store</p>
-              <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#3b2629] sm:text-[2.25rem]">
-                {copy.finalCta.title}
-              </h2>
-              <div className="mt-5 max-w-md">
-                <StoreButton href={storeHref} badge={store.badge} label={store.button} note={store.note} tone="light" />
               </div>
             </div>
           </section>

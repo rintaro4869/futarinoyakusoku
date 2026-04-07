@@ -52,7 +52,6 @@ export type LandingCopy = {
     availabilityNote: string
     secondaryCta: string
     secondaryHref: string
-    stats: { label: string; value: string }[]
     screenshot: string
     screenshotAlt: string
   }
@@ -69,19 +68,8 @@ export type LandingCopy = {
       screenshot: string
     }[]
   }
-  safety: {
-    eyebrow: string
-    title: string
-    items: { title: string; description: string }[]
-    note: string
-  }
   faqTitle: string
   faqs: { question: string; answer: string }[]
-  finalCta: {
-    title: string
-    description: string
-    note: string
-  }
   footerPrivacy: string
 }
 
@@ -273,11 +261,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         availabilityNote: 'iPhone launch coming soon.',
         secondaryCta: 'See the screens',
         secondaryHref: '#showcase',
-        stats: [
-          { label: 'Home', value: 'Daily view' },
-          { label: 'Promises', value: 'Shared list' },
-          { label: 'Calendar', value: 'Weekly view' },
-        ],
         screenshot: screens.home,
         screenshotAlt: 'Pairlog home screen',
       },
@@ -320,16 +303,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
           },
         ],
       },
-      safety: {
-        eyebrow: 'Safety',
-        title: 'Made for mutual use',
-        items: [
-          { title: 'Mutual consent', description: 'Use it together, not on each other.' },
-          { title: 'Pause anytime', description: 'Either person can step away.' },
-          { title: 'Delete in settings', description: 'Shared records can be removed in the app.' },
-        ],
-        note: 'Relationship tools should never feel like surveillance.',
-      },
       faqTitle: 'Questions',
       faqs: [
         { question: 'Is Pairlog free?', answer: 'Yes. It is planned as a free iPhone app.' },
@@ -337,11 +310,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         { question: 'Can I start alone?', answer: 'Yes. You can invite your partner later.' },
         { question: 'Is Android supported?', answer: 'No. The current launch is iPhone only.' },
       ],
-      finalCta: {
-        title: 'Ready when it goes live.',
-        description: '',
-        note: '',
-      },
       footerPrivacy: 'Privacy Policy',
     }
   }
@@ -366,11 +334,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       availabilityNote: 'iPhone向けに公開準備中です。',
       secondaryCta: '画面を見る',
       secondaryHref: '#showcase',
-      stats: [
-        { label: 'ホーム', value: '今日が見える' },
-        { label: '約束', value: '一覧で見る' },
-        { label: 'カレンダー', value: '週で見る' },
-      ],
       screenshot: screens.home,
       screenshotAlt: 'Pairlog ホーム画面',
     },
@@ -413,16 +376,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         },
       ],
     },
-    safety: {
-      eyebrow: '安心',
-      title: 'ふたりで使う前提だけ残す',
-      items: [
-        { title: 'ふたりで使う', description: '一方が管理する道具にしません。' },
-        { title: 'いつでも止められる', description: '片方だけでも離れられます。' },
-        { title: '設定から削除できる', description: '共有記録もアプリ内で消せます。' },
-      ],
-      note: '監視ではなく、対話の補助として使う前提です。',
-    },
     faqTitle: 'よくある質問',
     faqs: [
       { question: '無料ですか？', answer: 'はい。iPhone向けに無料で始められる想定です。' },
@@ -430,11 +383,6 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       { question: 'ひとりでも始められますか？', answer: 'はい。あとから招待リンクでつなげられます。' },
       { question: 'Android はありますか？', answer: '現時点の公開対象は iPhone です。' },
     ],
-    finalCta: {
-      title: '公開後はここから始める。',
-      description: '',
-      note: '',
-    },
     footerPrivacy: 'プライバシーポリシー',
   }
 }
