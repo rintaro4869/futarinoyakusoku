@@ -81,9 +81,13 @@ export function DownloadStatusPage({ locale }: { locale: LandingLocale }) {
                   />
                 </div>
                 <div className="mt-4 rounded-[24px] border border-[#efe5e7] bg-[#faf7f8] px-4 py-4 text-sm leading-6 text-[#6f606b]">
-                  {isJapanese
-                    ? '承認後はこのまま App Store へつながります。'
-                    : 'After approval, this path can point to the App Store listing.'}
+                  {APP_STORE.status === 'live'
+                    ? isJapanese
+                      ? 'このまま App Store の配布ページへ移動できます。'
+                      : 'This page links directly to the App Store listing.'
+                    : isJapanese
+                      ? '承認後はこのまま App Store へつながります。'
+                      : 'After approval, this path can point to the App Store listing.'}
                 </div>
               </div>
             </div>

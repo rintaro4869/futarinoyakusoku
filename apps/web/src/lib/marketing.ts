@@ -4,7 +4,7 @@ export const SITE_URL = 'https://pairlog.pages.dev'
 
 export const APP_STORE = {
   url: 'https://apps.apple.com/app/id6760982290',
-  status: 'in_review' as 'live' | 'in_review',
+  status: 'live' as 'live' | 'in_review',
   appId: '6760982290',
 }
 
@@ -133,7 +133,7 @@ export function getStoreMeta(locale: LandingLocale) {
   if (locale === 'ja') {
     return APP_STORE.status === 'live'
       ? {
-          badge: 'Available on the App Store',
+          badge: 'App Store 公開中',
           button: 'App Store からダウンロード',
           note: 'iPhoneで無料で始められます。',
         }
@@ -170,7 +170,14 @@ export function getDownloadMetadata(locale: LandingLocale): Metadata {
   const url = `${SITE_URL}${copy.path}`
 
   return {
-    title: locale === 'ja' ? 'App Store 公開状況' : 'App Store release status',
+    title:
+      APP_STORE.status === 'live'
+        ? locale === 'ja'
+          ? 'App Store でダウンロード'
+          : 'Download on the App Store'
+        : locale === 'ja'
+          ? 'App Store 公開状況'
+          : 'App Store release status',
     description: copy.description,
     alternates: {
       canonical: copy.path,
@@ -211,6 +218,18 @@ export function getDownloadMetadata(locale: LandingLocale): Metadata {
 
 export function getDownloadCopy(locale: LandingLocale): DownloadCopy {
   if (locale === 'en') {
+    if (APP_STORE.status === 'live') {
+      return {
+        path: '/en/download',
+        title: 'Download on the App Store',
+        description: 'Pairlog is now live on the App Store for iPhone.',
+        statusTitle: 'Pairlog is live now',
+        statusBody: 'Use the button below to open the App Store listing.',
+        points: ['Platform: iPhone', 'Free to start'],
+        footerNote: 'This button opens the App Store listing.',
+      }
+    }
+
     return {
       path: '/en/download',
       title: 'App Store status',
@@ -222,6 +241,18 @@ export function getDownloadCopy(locale: LandingLocale): DownloadCopy {
         'Same link after approval',
       ],
       footerNote: 'Until approval, this page only shows status.',
+    }
+  }
+
+  if (APP_STORE.status === 'live') {
+    return {
+      path: '/download',
+      title: 'App Store でダウンロード',
+      description: 'Pairlog は App Store で公開中です。iPhone でダウンロードできます。',
+      statusTitle: 'Pairlog は公開中です',
+      statusBody: '下のボタンからそのまま App Store を開けます。',
+      points: ['公開対象: iPhone', '無料で開始'],
+      footerNote: 'ボタンを押すと App Store に移動します。',
     }
   }
 
@@ -247,7 +278,7 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       locale: 'en',
       path: '/en',
       title: 'A simple iPhone app for promises and shared days',
-      description: 'Pairlog is an iPhone app for couples to keep promises, gratitude, calendar history, and rewards in one simple place. App Store release coming soon.',
+      description: 'Pairlog is an iPhone app for couples to keep promises, gratitude, calendar history, and rewards in one simple place. Download it on the App Store.',
       keywords: ['couple app', 'relationship tracker', 'gratitude app', 'promise tracker', 'shared rewards', 'partner app', 'iPhone app for couples'],
       languageSwitchLabel: '日本語',
       languageSwitchHref: '/',
@@ -257,8 +288,8 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
         title: 'One place for promises and shared days.',
         lead: 'Keep promises, gratitude, and your weekly view together.',
         body: '',
-        status: 'App Store review in progress',
-        availabilityNote: 'iPhone launch coming soon.',
+        status: 'Available on the App Store',
+        availabilityNote: 'Now available on iPhone.',
         secondaryCta: 'See the screens',
         secondaryHref: '#showcase',
         screenshot: screens.home,
@@ -305,8 +336,8 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       },
       faqTitle: 'Questions',
       faqs: [
-        { question: 'Is Pairlog free?', answer: 'Yes. It is planned as a free iPhone app.' },
-        { question: 'Is it live already?', answer: 'Not yet. It is still in App Store review.' },
+        { question: 'Is Pairlog free?', answer: 'Yes. It is free to start on iPhone.' },
+        { question: 'Is it live already?', answer: 'Yes. You can download it from the App Store.' },
         { question: 'Can I start alone?', answer: 'Yes. You can invite your partner later.' },
         { question: 'Is Android supported?', answer: 'No. The current launch is iPhone only.' },
       ],
@@ -320,7 +351,7 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
     locale: 'ja',
     path: '/',
     title: 'ふたりの記録を、ひとつにするiPhoneアプリ',
-    description: 'Pairlog は、約束、ありがとう、カレンダー、ごほうびをひとつにまとめて見返せる、カップル・夫婦向けのiPhoneアプリです。App Store 公開準備中。',
+    description: 'Pairlog は、約束、ありがとう、カレンダー、ごほうびをひとつにまとめて見返せる、カップル・夫婦向けのiPhoneアプリです。App Store からダウンロードできます。',
     keywords: ['カップルアプリ', '夫婦アプリ', '約束アプリ', 'ありがとう 記録', '関係改善 アプリ', 'ペアアプリ', 'iPhoneアプリ'],
     languageSwitchLabel: 'English',
     languageSwitchHref: '/en',
@@ -330,8 +361,8 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
       title: 'ふたりの記録を、ひとつに。',
       lead: '約束、ありがとう、カレンダーを同じ場所で見返せます。',
       body: '',
-      status: 'App Store 審査中',
-      availabilityNote: 'iPhone向けに公開準備中です。',
+      status: 'App Store 公開中',
+      availabilityNote: 'iPhoneでダウンロードできます。',
       secondaryCta: '画面を見る',
       secondaryHref: '#showcase',
       screenshot: screens.home,
@@ -378,8 +409,8 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
     },
     faqTitle: 'よくある質問',
     faqs: [
-      { question: '無料ですか？', answer: 'はい。iPhone向けに無料で始められる想定です。' },
-      { question: 'もう公開されていますか？', answer: 'まだです。現在は App Store 審査中です。' },
+      { question: '無料ですか？', answer: 'はい。iPhoneで無料で始められます。' },
+      { question: 'もう公開されていますか？', answer: 'はい。App Store からダウンロードできます。' },
       { question: 'ひとりでも始められますか？', answer: 'はい。あとから招待リンクでつなげられます。' },
       { question: 'Android はありますか？', answer: '現時点の公開対象は iPhone です。' },
     ],
