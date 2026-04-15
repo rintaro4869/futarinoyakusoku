@@ -35,6 +35,7 @@ export const en: TranslationKeys = {
     promises: 'Promises',
     calendar: 'Calendar',
     rewards: 'Rewards',
+    diary: 'Diary',
     settings: 'Settings',
   },
 
@@ -115,7 +116,7 @@ export const en: TranslationKeys = {
     adhoc_send_btn: 'Send a thank you',
     adhoc_modal_title: 'Send a thank you',
     adhoc_modal_send: 'Send',
-    adhoc_modal_question: 'What are you grateful for?',
+    adhoc_modal_question: 'Note',
     adhoc_modal_placeholder: 'e.g. Thanks for doing the dishes!',
     adhoc_modal_points: 'Points',
   },
@@ -351,6 +352,18 @@ export const en: TranslationKeys = {
     use_celebration_desc: 'Using "{name}" will move it to your used history.',
     filtered_empty_title: 'No reward here yet',
     filtered_empty_desc: 'Add one to this tab so it is easier to see what these points are building toward.',
+  },
+
+  diary: {
+    title: 'Our Diary',
+    write_btn: '＋ Write',
+    modal_title: 'Today\'s Entry',
+    modal_placeholder: 'How was your day?',
+    modal_save: 'Save',
+    empty_title: 'No entries yet',
+    empty_desc: 'Tap \'＋ Write\' to record\nyour memories together',
+    entry_label: 'Note',
+    thankyou_label: 'Thank you',
   },
 
   settings: {

@@ -38,6 +38,12 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
     inLanguage: locale === 'ja' ? 'ja-JP' : 'en-US',
     description: copy.description,
     url: copy.path === '/' ? 'https://pairlog.pages.dev' : `https://pairlog.pages.dev${copy.path}`,
+    downloadUrl: 'https://apps.apple.com/app/id6760982290',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: locale === 'ja' ? 'JPY' : 'USD',
+    },
   }
 
   const faqJsonLd = {

@@ -35,6 +35,7 @@ export const ja = {
     promises: '約束',
     calendar: 'カレンダー',
     rewards: 'ごほうび',
+    diary: '日記',
     settings: '設定',
   },
 
@@ -119,7 +120,7 @@ export const ja = {
     adhoc_send_btn: 'ありがとうを送る',
     adhoc_modal_title: 'ありがとうを送る',
     adhoc_modal_send: '送る',
-    adhoc_modal_question: '何に感謝しますか？',
+    adhoc_modal_question: 'メモ',
     adhoc_modal_placeholder: '例：洗い物してくれてありがとう',
     adhoc_modal_points: 'ポイント',
   },
@@ -375,6 +376,19 @@ export const ja = {
     use_celebration_desc: '「{name}」を使うと、使用済み履歴に移ります。',
     filtered_empty_title: 'このごほうびはまだありません',
     filtered_empty_desc: '上の切り替えに合わせたごほうびを追加すると、行き先が見えやすくなります。',
+  },
+
+  // ─── 日記 ────────────────────────────────────────────────
+  diary: {
+    title: 'ふたりの日記',
+    write_btn: '＋ 書く',
+    modal_title: '今日の記録',
+    modal_placeholder: '今日はどんな一日でしたか？',
+    modal_save: '保存',
+    empty_title: 'まだ記録がありません',
+    empty_desc: '「＋ 書く」から\nふたりの思い出を残しましょう',
+    entry_label: 'メモ',
+    thankyou_label: 'ありがとう',
   },
 
   // ─── 設定 ────────────────────────────────────────────────

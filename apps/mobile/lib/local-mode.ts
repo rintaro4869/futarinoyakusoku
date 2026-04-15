@@ -1,14 +1,15 @@
 import * as SecureStore from 'expo-secure-store'
-import type { CreateRuleInput, Event, Rule } from './api'
+import type { CreateRuleInput, DiaryEntry, Event, Rule } from './api'
 
 const KEY_LOCAL_RULES = 'fny_local_rules'
 const KEY_LOCAL_EVENTS = 'fny_local_events'
+const KEY_LOCAL_DIARY = 'fny_local_diary'
 
 function scopedKey(base: string, userId: string | null) {
   return `${base}_${userId ?? 'guest'}`
 }
 
-function buildLocalId(prefix: 'rule' | 'event') {
+function buildLocalId(prefix: 'rule' | 'event' | 'diary') {
   return `local_${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
 }
 
@@ -33,11 +34,23 @@ export async function setLocalRules(userId: string | null, rules: Rule[]): Promi
 
 export async function getLocalEvents(userId: string | null): Promise<Event[]> {
   const raw = await SecureStore.getItemAsync(scopedKey(KEY_LOCAL_EVENTS, userId))
-  return safeParseArray<Event>(raw)
+  return safeParseArray<Event>(raw).map((event) => ({
+    ...event,
+    memo: event.memo ?? null,
+  }))
 }
 
 export async function setLocalEvents(userId: string | null, events: Event[]): Promise<void> {
   await SecureStore.setItemAsync(scopedKey(KEY_LOCAL_EVENTS, userId), JSON.stringify(events))
+}
+
+export async function getLocalDiaryEntries(userId: string | null): Promise<DiaryEntry[]> {
+  const raw = await SecureStore.getItemAsync(scopedKey(KEY_LOCAL_DIARY, userId))
+  return safeParseArray<DiaryEntry>(raw)
+}
+
+export async function setLocalDiaryEntries(userId: string | null, entries: DiaryEntry[]): Promise<void> {
+  await SecureStore.setItemAsync(scopedKey(KEY_LOCAL_DIARY, userId), JSON.stringify(entries))
 }
 
 export async function createLocalRule(input: CreateRuleInput, userId: string | null): Promise<Rule> {
@@ -124,6 +137,7 @@ export async function createLocalEvent(
     status: 'approved',
     report_type: 'self',
     note: note ?? null,
+    memo: null,
     created_at: new Date().toISOString(),
     occurred_on: occurredOn ?? null,
   }
@@ -131,7 +145,45 @@ export async function createLocalEvent(
   return event
 }
 
+export async function createLocalDiaryEntry(
+  userId: string | null,
+  body: string
+): Promise<DiaryEntry> {
+  const entries = await getLocalDiaryEntries(userId)
+  const entry: DiaryEntry = {
+    id: buildLocalId('diary'),
+    couple_id: 'local',
+    author_user_id: userId ?? 'guest',
+    body: body.trim(),
+    created_at: new Date().toISOString(),
+  }
+  await setLocalDiaryEntries(userId, [entry, ...entries])
+  return entry
+}
+
+export async function updateLocalDiaryEntry(
+  userId: string | null,
+  entryId: string,
+  body: string
+): Promise<DiaryEntry | null> {
+  const entries = await getLocalDiaryEntries(userId)
+  let updatedEntry: DiaryEntry | null = null
+
+  const updatedEntries = entries.map((entry) => {
+    if (entry.id !== entryId) return entry
+    updatedEntry = {
+      ...entry,
+      body: body.trim(),
+    }
+    return updatedEntry
+  })
+
+  await setLocalDiaryEntries(userId, updatedEntries)
+  return updatedEntry
+}
+
 export async function clearLocalModeData(userId: string | null): Promise<void> {
   await SecureStore.deleteItemAsync(scopedKey(KEY_LOCAL_RULES, userId))
   await SecureStore.deleteItemAsync(scopedKey(KEY_LOCAL_EVENTS, userId))
+  await SecureStore.deleteItemAsync(scopedKey(KEY_LOCAL_DIARY, userId))
 }

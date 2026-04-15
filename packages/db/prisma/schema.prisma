@@ -29,6 +29,7 @@ model User {
   analyticsEvents AnalyticsEvent[]
   inviteCodes   InviteCode[]
   passwordResetTokens PasswordResetToken[]
+  diaryEntries  DiaryEntry[]
 
   @@map("users")
 }
@@ -60,6 +61,7 @@ model Couple {
   safetyActions SafetyAction[]
   analyticsEvents AnalyticsEvent[]
   inviteCodes   InviteCode[]
+  diaryEntries  DiaryEntry[]
 
   @@map("couples")
 }
@@ -148,6 +150,7 @@ model RuleEvent {
   targetUserId   String      @map("target_user_id")
   reportType     String      @map("report_type")
   note           String?
+  memo           String?
   status         String      @default("pending")
   expiresAt      DateTime    @map("expires_at")
   approvedBy     String?     @map("approved_by")
@@ -167,6 +170,19 @@ model RuleEvent {
   repairActions RepairAction[]
 
   @@map("rule_events")
+}
+
+model DiaryEntry {
+  id           String   @id
+  coupleId     String   @map("couple_id")
+  authorUserId String   @map("author_user_id")
+  body         String
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  couple Couple @relation(fields: [coupleId], references: [id])
+  author User   @relation(fields: [authorUserId], references: [id])
+
+  @@map("diary_entries")
 }
 
 model PointLedger {

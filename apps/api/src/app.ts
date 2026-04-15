@@ -22,6 +22,7 @@ import { repairRoutes, repairTemplateRoutes } from './routes/hono/repairs.js'
 import { safetyRoutes } from './routes/hono/safety.js'
 import { summaryRoutes } from './routes/hono/summary.js'
 import { privacyRoutes } from './routes/hono/privacy.js'
+import { diaryRoutes } from './routes/hono/diary.js'
 
 export type Env = {
   JWT_SECRET: string
@@ -166,6 +167,7 @@ export function createApp(
   safetyRoutes(v1)
   summaryRoutes(v1)
   privacyRoutes(v1)
+  diaryRoutes(v1)
   app.route('/api/v1', v1)
 
   // Error handler

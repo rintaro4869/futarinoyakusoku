@@ -5,11 +5,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://pairlog.pages.dev'),
   applicationName: 'Pairlog',
   title: {
-    default: 'Pairlog',
+    default: 'Pairlog - カップル・夫婦の記録アプリ',
     template: '%s | Pairlog',
   },
-  description: 'Pairlog は、カップルや夫婦のために約束、感謝、カレンダー、ごほうびを記録するアプリです。',
-  keywords: ['カップルアプリ', '夫婦アプリ', '記録アプリ', 'ペアアプリ', '約束アプリ', '感謝アプリ'],
+  description: 'カップル・夫婦のための記録アプリ。約束の管理、ありがとうの記録、カレンダー、ごほうびをiPhoneひとつでまとめて残せます。',
+  keywords: ['カップルアプリ', '夫婦アプリ', 'カップル 記録', 'ふたり 記録', '約束 管理 アプリ', 'ありがとう 記録', 'ペアアプリ', 'カップル iPhoneアプリ'],
   openGraph: {
     title: 'Pairlog',
     description: 'Pairlog は、カップルや夫婦のために約束、感謝、カレンダー、ごほうびを記録するアプリです。',

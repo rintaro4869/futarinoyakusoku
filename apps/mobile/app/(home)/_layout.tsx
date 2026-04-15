@@ -14,6 +14,7 @@ const TAB_DEFS: {
   { name: 'index',    titleKey: 'tabs.home',      icon: 'home-outline',      iconActive: 'home'      },
   { name: 'promises', titleKey: 'tabs.promises',   icon: 'checkmark-circle-outline', iconActive: 'checkmark-circle' },
   { name: 'calendar', titleKey: 'tabs.calendar',   icon: 'calendar-outline',  iconActive: 'calendar'  },
+  { name: 'diary',    titleKey: 'tabs.diary',      icon: 'book-outline',      iconActive: 'book'      },
   { name: 'rewards',  titleKey: 'tabs.rewards',    icon: 'gift-outline',      iconActive: 'gift'      },
   { name: 'settings', titleKey: 'tabs.settings',   icon: 'settings-outline',  iconActive: 'settings'  },
 ]

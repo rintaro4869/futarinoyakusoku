@@ -31,6 +31,7 @@ export const zhHant: TranslationKeys = {
     promises: "約定",
     calendar: "日曆",
     rewards: "獎勵",
+    diary: "日記",
     settings: "設定",
   },
 
@@ -111,7 +112,7 @@ export const zhHant: TranslationKeys = {
     adhoc_send_btn: "送出感謝",
     adhoc_modal_title: "送出感謝",
     adhoc_modal_send: "送出",
-    adhoc_modal_question: "感謝什麼呢？",
+    adhoc_modal_question: "備註",
     adhoc_modal_placeholder: "例：謝謝你幫我洗碗！",
     adhoc_modal_points: "點數",
   },
@@ -347,6 +348,18 @@ export const zhHant: TranslationKeys = {
     use_celebration_desc: "使用「{name}」後，會移到已使用紀錄中。",
     filtered_empty_title: "這個分頁還沒有獎勵",
     filtered_empty_desc: "在這裡新增獎勵後，就更容易看出點數會累積到哪裡。",
+  },
+
+  diary: {
+    title: "我們的日記",
+    write_btn: "＋ 寫下來",
+    modal_title: "今天的記錄",
+    modal_placeholder: "今天過得怎麼樣？",
+    modal_save: "儲存",
+    empty_title: "還沒有任何記錄",
+    empty_desc: "點選「＋ 寫下來」\n留下你們的回憶",
+    entry_label: "筆記",
+    thankyou_label: "謝謝",
   },
 
   settings: {

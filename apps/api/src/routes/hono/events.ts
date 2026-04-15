@@ -10,6 +10,7 @@ import { getWeekKey } from '../../lib/week-key.js'
 
 const createSchema = z.object({
   note: z.string().max(200).optional(),
+  memo: z.string().max(1000).optional(),
   occurred_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 })
 
@@ -30,7 +31,7 @@ function toOccurrenceNote(eventId: string): string {
 }
 
 function toEvent(
-  e: { id: string; ruleId: string; status: string; reportType: string; note: string | null; createdAt: Date },
+  e: { id: string; ruleId: string; status: string; reportType: string; note: string | null; memo: string | null; createdAt: Date },
   occurredOn?: Date | null
 ) {
   return {
@@ -39,6 +40,7 @@ function toEvent(
     status: e.status,
     report_type: e.reportType,
     note: e.note,
+    memo: e.memo,
     created_at: e.createdAt.toISOString(),
     occurred_on: occurredOn ? formatDateOnlyUTC(occurredOn) : null,
   }
@@ -144,7 +146,7 @@ export function eventRoutes(app: Hono<{ Variables: Variables }>) {
       data: {
         id: eventId, ruleId, coupleId: rule.coupleId,
         reporterUserId: userId, targetUserId: primaryTarget,
-        reportType, note: body.note ?? null,
+        reportType, note: body.note ?? null, memo: body.memo ?? null,
         status: autoApprove ? 'approved' : 'pending',
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         ...(autoApprove && { approvedBy: userId, approvedAt: now }),

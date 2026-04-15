@@ -7,6 +7,7 @@ export type {
   Rule,
   RuleOccurrenceAction,
   RuleEvent,
+  DiaryEntry,
   PointLedger,
   RepairTemplate,
   RepairAction,

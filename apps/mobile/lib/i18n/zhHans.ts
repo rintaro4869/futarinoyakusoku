@@ -31,6 +31,7 @@ export const zhHans: TranslationKeys = {
     promises: "约定",
     calendar: "日历",
     rewards: "奖励",
+    diary: "日记",
     settings: "设置",
   },
 
@@ -111,7 +112,7 @@ export const zhHans: TranslationKeys = {
     adhoc_send_btn: "送出感谢",
     adhoc_modal_title: "送出感谢",
     adhoc_modal_send: "送出",
-    adhoc_modal_question: "感谢什么呢？",
+    adhoc_modal_question: "备注",
     adhoc_modal_placeholder: "例：谢谢你帮我洗碗！",
     adhoc_modal_points: "积分",
   },
@@ -347,6 +348,18 @@ export const zhHans: TranslationKeys = {
     use_celebration_desc: "使用“{name}”后，会移到已使用记录中。",
     filtered_empty_title: "这个分页还没有奖励",
     filtered_empty_desc: "在这里新增奖励后，就更容易看出点数会累计到哪里。",
+  },
+
+  diary: {
+    title: "我们的日记",
+    write_btn: "＋ 写下来",
+    modal_title: "今天的记录",
+    modal_placeholder: "今天过得怎么样？",
+    modal_save: "保存",
+    empty_title: "还没有任何记录",
+    empty_desc: "点击「＋ 写下来」\n留下你们的回忆",
+    entry_label: "笔记",
+    thankyou_label: "谢谢",
   },
 
   settings: {

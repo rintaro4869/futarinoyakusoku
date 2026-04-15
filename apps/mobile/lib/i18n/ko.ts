@@ -31,6 +31,7 @@ export const ko: TranslationKeys = {
     promises: "약속",
     calendar: "캘린더",
     rewards: "보상",
+    diary: "일기",
     settings: "설정",
   },
 
@@ -111,7 +112,7 @@ export const ko: TranslationKeys = {
     adhoc_send_btn: "감사 보내기",
     adhoc_modal_title: "감사 보내기",
     adhoc_modal_send: "보내기",
-    adhoc_modal_question: "무엇에 감사하나요?",
+    adhoc_modal_question: "메모",
     adhoc_modal_placeholder: "예: 설거지해줘서 고마워!",
     adhoc_modal_points: "포인트",
   },
@@ -347,6 +348,18 @@ export const ko: TranslationKeys = {
     use_celebration_desc: "\"{name}\"을(를) 사용하면 사용 완료 기록으로 이동합니다.",
     filtered_empty_title: "이 탭에는 아직 보상이 없어요",
     filtered_empty_desc: "여기에 보상을 추가하면 포인트가 어디로 향하는지 더 쉽게 볼 수 있어요.",
+  },
+
+  diary: {
+    title: "우리의 일기",
+    write_btn: "＋ 쓰기",
+    modal_title: "오늘의 기록",
+    modal_placeholder: "오늘은 어떤 하루였나요?",
+    modal_save: "저장",
+    empty_title: "아직 기록이 없어요",
+    empty_desc: "'＋ 쓰기'를 눌러\n함께한 추억을 남겨 보세요",
+    entry_label: "메모",
+    thankyou_label: "고마워",
   },
 
   settings: {

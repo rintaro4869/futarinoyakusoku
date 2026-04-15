@@ -33,6 +33,7 @@ vi.mock('@fny/db', () => {
     inviteCode: { create: vi.fn(), findUnique: vi.fn(), update: vi.fn(), deleteMany: vi.fn() },
     rule: { create: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(), update: vi.fn(), count: vi.fn(), deleteMany: vi.fn() },
     ruleEvent: { create: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(), update: vi.fn(), updateMany: vi.fn(), count: vi.fn(), deleteMany: vi.fn() },
+    diaryEntry: { create: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(), update: vi.fn(), deleteMany: vi.fn() },
     ruleOccurrenceAction: { create: vi.fn(), findMany: vi.fn(), deleteMany: vi.fn() },
     pointLedger: { create: vi.fn(), aggregate: vi.fn(), deleteMany: vi.fn() },
     repairTemplate: { findUnique: vi.fn(), findMany: vi.fn() },

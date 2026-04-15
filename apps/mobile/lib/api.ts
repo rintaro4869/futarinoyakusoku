@@ -294,12 +294,14 @@ export interface Event {
   status: 'pending' | 'approved' | 'rejected' | 'expired'
   report_type: 'self' | 'partner'
   note: string | null
+  memo: string | null
   created_at: string
   occurred_on?: string | null
 }
 
 export interface CreateEventInput {
   note?: string
+  memo?: string
   occurred_on?: string
 }
 
@@ -370,4 +372,30 @@ export interface WeeklySummary {
     rejected_count: number
     expired_count: number
   }>
+}
+
+export interface DiaryEntry {
+  id: string
+  couple_id: string
+  author_user_id: string
+  body: string
+  created_at: string
+}
+
+export async function getDiaryEntries(coupleId: string) {
+  return apiFetch<{ items: DiaryEntry[] }>(`/couples/${coupleId}/diary`)
+}
+
+export async function createDiaryEntry(coupleId: string, body: string) {
+  return apiFetch<DiaryEntry>(`/couples/${coupleId}/diary`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  })
+}
+
+export async function updateDiaryEntry(entryId: string, body: string) {
+  return apiFetch<DiaryEntry>(`/diary/${entryId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ body }),
+  })
 }
