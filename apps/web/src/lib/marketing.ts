@@ -21,12 +21,14 @@ export const LANDING_SCREENSHOTS = {
     promises: '/marketing/screens/ja-promises.png',
     calendar: '/marketing/screens/ja-calendar.png',
     rewards: '/marketing/screens/ja-rewards.png',
+    diary: '/marketing/screens/ja-diary.png',
   },
   en: {
     home: '/marketing/screens/en-home.png',
     promises: '/marketing/screens/en-promises.png',
     calendar: '/marketing/screens/en-calendar.png',
     rewards: '/marketing/screens/en-rewards.png',
+    diary: '/marketing/screens/en-diary.png',
   },
 } as const
 
@@ -89,7 +91,9 @@ export function getLandingMetadata(locale: LandingLocale): Metadata {
   const url = path === '/' ? SITE_URL : `${SITE_URL}${path}`
 
   return {
-    title: copy.title,
+    title: {
+      absolute: copy.title,
+    },
     description: copy.description,
     keywords: copy.keywords,
     alternates: {
@@ -101,7 +105,7 @@ export function getLandingMetadata(locale: LandingLocale): Metadata {
       },
     },
     openGraph: {
-      title: 'Pairlog',
+      title: copy.title,
       description: copy.description,
       url,
       siteName: 'Pairlog',
@@ -118,7 +122,7 @@ export function getLandingMetadata(locale: LandingLocale): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Pairlog',
+      title: copy.title,
       description: copy.description,
       images: [MARKETING_SCREENSHOTS[0]],
     },
@@ -188,7 +192,14 @@ export function getDownloadMetadata(locale: LandingLocale): Metadata {
       },
     },
     openGraph: {
-      title: 'Pairlog',
+      title:
+        APP_STORE.status === 'live'
+          ? locale === 'ja'
+            ? 'App Store でダウンロード'
+            : 'Download on the App Store'
+          : locale === 'ja'
+            ? 'App Store 公開状況'
+            : 'App Store release status',
       description: copy.description,
       url,
       siteName: 'Pairlog',
@@ -205,7 +216,14 @@ export function getDownloadMetadata(locale: LandingLocale): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Pairlog',
+      title:
+        APP_STORE.status === 'live'
+          ? locale === 'ja'
+            ? 'App Store でダウンロード'
+            : 'Download on the App Store'
+          : locale === 'ja'
+            ? 'App Store 公開状況'
+            : 'App Store release status',
       description: copy.description,
       images: [MARKETING_SCREENSHOTS[0]],
     },
@@ -277,17 +295,17 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
     return {
       locale: 'en',
       path: '/en',
-      title: 'Couple & relationship app for promises and shared records | Pairlog',
-      description: 'Pairlog is an iPhone app for couples to track promises, gratitude, calendar history, and rewards in one place. Free to download on the App Store.',
-      keywords: ['couple app', 'relationship tracker', 'couples record app', 'gratitude app', 'promise tracker', 'shared app for couples', 'partner app', 'iPhone couple app'],
+      title: 'Couple Diary App for Promises, Gratitude & Shared Records | Pairlog',
+      description: 'Pairlog is a free iPhone app for couples. Keep a shared diary, track promises, log gratitude, and save relationship memories together in one place.',
+      keywords: ['couple app', 'relationship tracker', 'couples diary app', 'shared diary app', 'couples record app', 'gratitude app', 'promise tracker', 'shared diary for couples', 'partner app', 'iPhone couple app', 'couple journal', 'shared diary app for couples', 'couple journal app', 'couples promise tracker', 'relationship diary app', 'couple memory app'],
       languageSwitchLabel: '日本語',
       languageSwitchHref: '/',
       navLabel: 'Pairlog',
       hero: {
         eyebrow: 'A simple app for two',
-        title: 'One place for promises and shared days.',
-        lead: 'Keep promises, gratitude, and your weekly view together.',
-        body: '',
+        title: 'A shared diary and promise tracker for couples.',
+        lead: 'Keep promises, gratitude, and daily relationship records in one place.',
+        body: 'Pairlog is a couples diary app for iPhone that combines a shared journal, promise tracking, gratitude logs, and relationship memories in one place.',
         status: 'Available on the App Store',
         availabilityNote: 'Now available on iPhone.',
         secondaryCta: 'See the screens',
@@ -332,15 +350,24 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
             tone: 'cream',
             screenshot: screens.rewards,
           },
+          {
+            eyebrow: 'Your story, written together',
+            title: 'Diary',
+            description: 'Write short notes about your day together. Build a timeline only the two of you can see.',
+            highlights: ['Shared diary', 'Timeline'],
+            tone: 'sky',
+            screenshot: screens.diary,
+          },
         ],
       },
       faqTitle: 'Questions',
       faqs: [
-        { question: 'What is Pairlog?', answer: 'Pairlog is an iPhone app for couples and partners to track promises, gratitude, a shared calendar, and rewards together. Everything is in one place so you can look back on what matters.' },
+        { question: 'What is Pairlog?', answer: 'Pairlog is a free iPhone app for couples. Track promises, write a shared diary, log gratitude, view your history on a calendar, and earn rewards together — all in one place.' },
+        { question: 'Does Pairlog have a shared diary?', answer: 'Yes. The Diary screen lets both partners write short notes about your days together. Your entries build a private timeline only the two of you can read.' },
         { question: 'How do two people use the same app?', answer: 'One person creates an account and shares an invite link. The other opens the link and connects instantly. No complicated setup needed.' },
         { question: 'Can I use it to track promises and commitments?', answer: 'Yes. The Promises screen lets you list and manage what you agreed on together, with optional recurring reminders.' },
         { question: 'Can I record gratitude or kind gestures?', answer: 'Yes. The thank-you feature lets you log what your partner did, add a note, and assign points — so small moments are not forgotten.' },
-        { question: 'Is Pairlog free?', answer: 'Yes. It is free to start on iPhone.' },
+        { question: 'Is Pairlog free?', answer: 'Yes. It is free to download and start on iPhone.' },
         { question: 'Can I start alone?', answer: 'Yes. You can invite your partner later using a link.' },
         { question: 'Does it work for long-distance couples?', answer: 'Yes. Your data syncs in real time over the internet, so you and your partner always see the same records no matter where you are.' },
         { question: 'Is Android supported?', answer: 'No. The current launch is iPhone only.' },
@@ -354,17 +381,38 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
   return {
     locale: 'ja',
     path: '/',
-    title: 'カップル・夫婦の約束と記録をひとつに | Pairlog',
-    description: 'カップル・夫婦のための記録アプリ。約束の管理、ありがとうの記録、カレンダー、ごほうびをiPhoneひとつでまとめて残せます。App Store から無料でダウンロードできます。',
-    keywords: ['カップルアプリ', '夫婦アプリ', 'カップル 記録', 'ふたり 記録', '約束 管理 アプリ', 'ありがとう 記録', 'カップル iPhoneアプリ', 'ペアアプリ', '恋人 記録アプリ'],
+    title: 'カップル日記アプリ Pairlog｜同棲・夫婦で使える共有日記・約束管理アプリ',
+    description:
+      '同棲・夫婦向けの無料iPhoneアプリ。共有日記、約束管理、ありがとうの記録をひとつに。LINEやメモに流れがちなふたりの記録を、ふたりだけの場所に残せます。App Storeで無料ダウンロード。',
+    keywords: [
+      'カップルアプリ',
+      '夫婦アプリ',
+      '夫婦 共有アプリ',
+      '同棲 アプリ',
+      '同棲 カップル アプリ',
+      'カップル日記アプリ',
+      '共有日記アプリ',
+      '共有メモ アプリ',
+      'カップル 共有メモ',
+      'カップル日記',
+      'ふたり日記アプリ',
+      'カップル 記録',
+      'ふたり 記録',
+      '約束 管理 アプリ',
+      'ありがとう 記録',
+      'カップル iPhoneアプリ',
+      'ペアアプリ',
+      '恋人 記録アプリ',
+      '二人 日記',
+    ],
     languageSwitchLabel: 'English',
     languageSwitchHref: '/en',
     navLabel: 'Pairlog',
     hero: {
-      eyebrow: 'ふたりで使う記録アプリ',
-      title: 'ふたりの記録を、ひとつに。',
-      lead: '約束、ありがとう、カレンダーを同じ場所で見返せます。',
-      body: '',
+      eyebrow: 'カップル日記アプリ',
+      title: '同棲・夫婦で使えるカップル日記アプリ。ふたりの日記と約束を、ひとつに。',
+      lead: '共有日記、約束、ありがとう、カレンダーを、ふたりで同じ場所に残せます。',
+      body: 'カップル日記アプリ、共有日記アプリ、同棲アプリ、夫婦で使える共有アプリを探している人向けに、日記・約束・ありがとう・カレンダーを分けて続けやすくした無料の iPhone アプリです。',
       status: 'App Store 公開中',
       availabilityNote: 'iPhoneでダウンロードできます。',
       secondaryCta: '画面を見る',
@@ -409,15 +457,27 @@ export function getLandingCopy(locale: LandingLocale): LandingCopy {
           tone: 'cream',
           screenshot: screens.rewards,
         },
+        {
+          eyebrow: 'ふたりだけの物語',
+          title: '日記',
+          description: 'その日あったことをふたりで書き残せます。読み返すたびに、一緒に過ごした時間が蘇ります。',
+          highlights: ['ふたりの日記', 'タイムライン'],
+          tone: 'sky',
+          screenshot: screens.diary,
+        },
       ],
     },
     faqTitle: 'よくある質問',
     faqs: [
-      { question: 'カップルにおすすめの記録アプリはありますか？', answer: 'Pairlog はカップル・夫婦向けに設計された記録アプリです。約束の管理、ありがとうの記録、カレンダー、ごほうびをひとつのアプリにまとめています。ふたりで同じアプリを使うことで、大切なことを共有しながら記録できます。' },
+      { question: 'カップルにおすすめの記録アプリはありますか？', answer: 'Pairlog はカップル・夫婦向けの無料iPhoneアプリです。ふたりの日記・約束の管理・ありがとうの記録・カレンダー・ごほうびをひとつにまとめています。ふたりで同じアプリを使うことで、大切なことを共有しながら記録できます。' },
+      { question: 'カップルで使える日記アプリを探しています', answer: 'Pairlog の「日記」機能では、ふたりそれぞれがその日あったことを書き残せます。投稿はふたりだけが読めるタイムラインに並び、過去の思い出をいつでも見返せます。' },
+      { question: '同棲カップル向けのアプリを探しています', answer: 'Pairlog は、家事だけでなく生活ルールやふたりの約束も残せる無料のiPhoneアプリです。同棲で起きやすい「言ったつもり」「伝わっているつもり」を減らしたい人に向いています。' },
+      { question: '夫婦で使える共有アプリはありますか？', answer: 'はい。Pairlog は夫婦で共有したい日記、約束、ありがとうの記録をひとつにまとめられます。予定共有だけでは足りない家庭の記録を、ふたりで見返しやすい形にできます。' },
+      { question: '共有メモアプリの代わりに使えますか？', answer: 'はい。Pairlog は共有メモのように何でも一枚に書く形ではなく、約束・日記・ありがとうを分けて残せます。LINEや共有メモで流れやすい内容を、ふたりで見返しやすく整理できます。' },
       { question: 'ふたりで同じアプリを使うにはどうすればいいですか？', answer: '片方がアプリを起動して招待リンクを発行し、もう片方がそのリンクからアプリを開くだけでペアリングが完了します。リンクを送り合うだけなので簡単です。' },
       { question: '約束を管理できるアプリを探しています', answer: 'Pairlog の「約束」機能では、ふたりで決めたことを一覧で記録・管理できます。曜日ごとの繰り返し設定やリマインダー機能もあり、忘れずに続けられます。' },
       { question: 'ありがとうの気持ちを記録できますか？', answer: 'はい。「ありがとう」機能では、相手にしてもらったことをタイトルとメモで記録できます。ポイントもたまるので、小さな感謝を積み重ねるきっかけになります。' },
-      { question: '無料ですか？', answer: 'はい。iPhoneで無料で始められます。' },
+      { question: '無料ですか？', answer: 'はい。iPhoneで無料でダウンロードできます。' },
       { question: 'ひとりでも始められますか？', answer: 'はい。あとから招待リンクでパートナーをつなげられます。まず自分だけで使い始めることもできます。' },
       { question: '遠距離カップルでも使えますか？', answer: 'はい。インターネットを通じてふたりのデータを同期しているので、離れていても同じ記録をリアルタイムで共有できます。' },
       { question: 'Android はありますか？', answer: '現時点の公開対象は iPhone のみです。' },
