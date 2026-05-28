@@ -196,6 +196,56 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
             </div>
           </section>
 
+          {locale === 'ja' && (
+            <section className="border-t border-[#eee4e5] py-12 lg:py-16">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b66c7c]">Guide</p>
+                <h2 className="marketing-display mt-3 text-[2rem] leading-[1] tracking-[-0.04em] text-[#261925] sm:text-[2.35rem]">
+                  アプリの選び方ガイド
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-[#675862]">
+                  同棲・夫婦・遠距カップルがアプリを選ぶときのポイントをまとめました。
+                </p>
+              </div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <Link
+                  href="/guide/cohabiting-couple-app"
+                  className="block rounded-[20px] border border-[#ece2e5] bg-white px-4 py-4 transition hover:bg-[#fffaf9]"
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b66c7c]">同棲カップルアプリ</p>
+                  <p className="mt-1 text-sm font-semibold text-[#261925]">同棲カップル向けアプリの選び方</p>
+                </Link>
+                <Link
+                  href="/guide/couple-diary-app"
+                  className="block rounded-[20px] border border-[#ece2e5] bg-white px-4 py-4 transition hover:bg-[#fffaf9]"
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b66c7c]">カップル日記アプリ</p>
+                  <p className="mt-1 text-sm font-semibold text-[#261925]">共有日記アプリの選び方</p>
+                </Link>
+                <Link
+                  href="/guide/married-couple-app"
+                  className="block rounded-[20px] border border-[#ece2e5] bg-white px-4 py-4 transition hover:bg-[#fffaf9]"
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b66c7c]">夫婦共有アプリ</p>
+                  <p className="mt-1 text-sm font-semibold text-[#261925]">夫婦で使える共有アプリの選び方</p>
+                </Link>
+                <Link
+                  href="/guide/couple-app-recommend"
+                  className="block rounded-[20px] border border-[#ece2e5] bg-white px-4 py-4 transition hover:bg-[#fffaf9]"
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b66c7c]">カップルアプリ選び方</p>
+                  <p className="mt-1 text-sm font-semibold text-[#261925]">カップルアプリはどう選ぶか</p>
+                </Link>
+              </div>
+              <Link
+                href="/guide"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#5c4e57] underline underline-offset-4"
+              >
+                すべてのガイドを見る <span aria-hidden="true">→</span>
+              </Link>
+            </section>
+          )}
+
           <footer className="border-t border-[#eadfe2] py-8">
             <div className="flex flex-col items-start justify-between gap-3 text-sm text-[#7f7079] sm:flex-row sm:items-center">
               <div className="flex flex-wrap items-center gap-4">
@@ -205,6 +255,11 @@ export function LandingPage({ locale }: { locale: LandingLocale }) {
                 <Link href="/privacy" className="underline underline-offset-4">
                   {copy.footerPrivacy}
                 </Link>
+                {locale === 'ja' && (
+                  <Link href="/guide" className="underline underline-offset-4">
+                    使い方ガイド
+                  </Link>
+                )}
               </div>
               <p className="text-xs text-[#a09099]">© 2026 Pairlog</p>
             </div>

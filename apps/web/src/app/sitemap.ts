@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 import { GUIDE_ARTICLES, getGuidePath } from '@/lib/guides'
 
 const SITE_URL = 'https://pairlog.pages.dev'
-const LAST_MODIFIED = new Date('2026-05-20T00:00:00+09:00')
+const LAST_MODIFIED = new Date('2026-05-28T00:00:00+09:00')
 
 const routes = [
   '/',
@@ -11,7 +11,6 @@ const routes = [
   '/download',
   '/en/download',
   '/guide',
-  '/guide/shared-diary-app',
   ...GUIDE_ARTICLES.map((guide) => getGuidePath(guide.slug)),
   '/privacy',
 ]
