@@ -56,7 +56,7 @@ const CONTENT: Record<Lang, {
       {
         title: '5. 公開ページのアクセス解析',
         body: [
-          '同意した場合に限り、公開案内ページでGoogle Analyticsを使い、ページ閲覧とApp Storeへの移動を計測します。Googleへ閲覧情報が送信されます。',
+          '同意した場合に限り、公開案内ページでGoogle Analyticsを使い、ページ閲覧、セッションやApp Storeへの移動などの利用状況を計測します。Googleへ閲覧情報が送信されます。',
           'ログイン後の画面やふたりの記録は計測対象に含めません。下のボタンから同意を変更できます。',
         ],
       },
@@ -106,7 +106,7 @@ const CONTENT: Record<Lang, {
       {
         title: '5. Public-page Analytics',
         body: [
-          'Only with your consent, we use Google Analytics on public information pages to measure page views and visits to the App Store. Browsing information is sent to Google.',
+          'Only with your consent, we use Google Analytics on public information pages to measure activity such as page views, sessions, and visits to the App Store. Browsing information is sent to Google.',
           'Signed-in screens and your shared records are excluded. You can change your choice using the button below.',
         ],
       },
@@ -156,7 +156,7 @@ const CONTENT: Record<Lang, {
       {
         title: '5. 공개 페이지 분석',
         body: [
-          '동의한 경우에만 공개 안내 페이지에서 Google Analytics로 페이지 조회와 App Store 이동을 측정하며, 방문 정보가 Google에 전송됩니다.',
+          '동의한 경우에만 공개 안내 페이지에서 Google Analytics로 페이지 조회, 세션 및 App Store 이동 등의 이용 현황을 측정하며, 방문 정보가 Google에 전송됩니다.',
           '로그인 후 화면과 두 사람의 기록은 측정하지 않습니다. 아래 버튼에서 동의를 변경할 수 있습니다.',
         ],
       },
@@ -206,7 +206,7 @@ const CONTENT: Record<Lang, {
       {
         title: '5. 公開頁面分析',
         body: [
-          '僅在您同意後，我們才會在公開介紹頁面使用 Google Analytics 衡量頁面瀏覽和前往 App Store 的次數。瀏覽資訊會傳送給 Google。',
+          '僅在您同意後，我們才會在公開介紹頁面使用 Google Analytics 衡量頁面瀏覽、工作階段及前往 App Store 等使用情況。瀏覽資訊會傳送給 Google。',
           '登入後頁面及兩人的記錄不會被追蹤。您可以使用下方按鈕變更選擇。',
         ],
       },
@@ -256,7 +256,7 @@ const CONTENT: Record<Lang, {
       {
         title: '5. 公开页面分析',
         body: [
-          '仅在您同意后，我们才会在公开介绍页面使用 Google Analytics 衡量页面浏览和前往 App Store 的次数。浏览信息会发送给 Google。',
+          '仅在您同意后，我们才会在公开介绍页面使用 Google Analytics 衡量页面浏览、会话及前往 App Store 等使用情况。浏览信息会发送给 Google。',
           '登录后页面及两人的记录不会被追踪。您可以使用下方按钮更改选择。',
         ],
       },

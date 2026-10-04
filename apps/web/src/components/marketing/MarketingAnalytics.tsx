@@ -114,7 +114,7 @@ export default function MarketingAnalytics() {
   return (
     <aside aria-label={english ? 'Site analytics settings' : 'サイト計測の設定'} className="fixed inset-x-4 bottom-4 z-[100] mx-auto max-w-lg rounded-2xl border border-[#e7cfda] bg-white p-4 text-[#2f2330] shadow-xl">
       <p className="text-sm font-bold">{english ? 'Allow analytics on public pages?' : '公開ページの利用状況を計測しますか？'}</p>
-      <p className="mt-1 text-xs leading-5 text-[#62515d]">{english ? 'With your consent, Google Analytics measures public page views and App Store visits. Signed-in screens and shared records are excluded.' : '同意するとGoogle Analyticsで公開ページの閲覧とApp Storeへの移動を計測します。二人の記録やログイン後の画面は計測しません。'}</p>
+      <p className="mt-1 text-xs leading-5 text-[#62515d]">{english ? 'With your consent, Google Analytics measures activity on public pages, including page views and App Store visits. Signed-in screens and shared records are excluded.' : '同意するとGoogle Analyticsで公開ページの利用状況（閲覧やApp Storeへの移動など）を計測します。二人の記録やログイン後の画面は計測しません。'}</p>
       <a href="/privacy" className="mt-1 inline-block text-xs underline">{english ? 'Privacy policy and settings' : 'プライバシーポリシーと設定'}</a>
       <div className="mt-3 flex justify-end gap-2">
         <button type="button" onClick={() => choose('declined')} className="rounded-full border border-[#d8c6ce] px-4 py-2 text-xs font-semibold">{english ? 'Decline' : '同意しない'}</button>
