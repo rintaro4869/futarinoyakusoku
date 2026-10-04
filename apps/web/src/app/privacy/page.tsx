@@ -16,12 +16,14 @@ const CONTENT: Record<Lang, {
   pageTitle: string
   title: string
   intro: string
+  analyticsSettings: string
   sections: { title: string; body: string[] }[]
 }> = {
   ja: {
     pageTitle: 'プライバシーポリシー | Pairlog',
     title: 'プライバシーポリシー',
     intro: 'Pairlog は、ふたりの約束を安心して記録できることを大切にしています。このページでは、アプリ内で扱う情報と、その使い方をわかりやすくまとめています。',
+    analyticsSettings: '公開ページの計測設定を変更',
     sections: [
       {
         title: '1. 取得する情報',
@@ -52,7 +54,14 @@ const CONTENT: Record<Lang, {
         ],
       },
       {
-        title: '5. お問い合わせ',
+        title: '5. 公開ページのアクセス解析',
+        body: [
+          '同意した場合に限り、公開案内ページでGoogle Analyticsを使い、ページ閲覧とApp Storeへの移動を計測します。Googleへ閲覧情報が送信されます。',
+          'ログイン後の画面やふたりの記録は計測対象に含めません。下のボタンから同意を変更できます。',
+        ],
+      },
+      {
+        title: '6. お問い合わせ',
         body: [
           'プライバシーに関するお問い合わせは、アプリ配信ページまたは案内済みの連絡先からご連絡ください。',
         ],
@@ -64,6 +73,7 @@ const CONTENT: Record<Lang, {
     pageTitle: 'Privacy Policy | Pairlog',
     title: 'Privacy Policy',
     intro: 'Pairlog is committed to keeping your shared memories safe. This page explains what information the app handles and how it is used.',
+    analyticsSettings: 'Change public-page analytics settings',
     sections: [
       {
         title: '1. Information We Collect',
@@ -94,7 +104,14 @@ const CONTENT: Record<Lang, {
         ],
       },
       {
-        title: '5. Contact',
+        title: '5. Public-page Analytics',
+        body: [
+          'Only with your consent, we use Google Analytics on public information pages to measure page views and visits to the App Store. Browsing information is sent to Google.',
+          'Signed-in screens and your shared records are excluded. You can change your choice using the button below.',
+        ],
+      },
+      {
+        title: '6. Contact',
         body: [
           'For privacy-related inquiries, please contact us through the app\'s distribution page or the contact information provided.',
         ],
@@ -106,6 +123,7 @@ const CONTENT: Record<Lang, {
     pageTitle: '개인정보 처리방침 | Pairlog',
     title: '개인정보 처리방침',
     intro: 'Pairlog는 두 사람의 소중한 기록을 안전하게 보관하는 것을 중요하게 생각합니다. 이 페이지에서는 앱에서 다루는 정보와 그 사용 방법을 안내합니다.',
+    analyticsSettings: '공개 페이지 분석 설정 변경',
     sections: [
       {
         title: '1. 수집하는 정보',
@@ -136,7 +154,14 @@ const CONTENT: Record<Lang, {
         ],
       },
       {
-        title: '5. 문의',
+        title: '5. 공개 페이지 분석',
+        body: [
+          '동의한 경우에만 공개 안내 페이지에서 Google Analytics로 페이지 조회와 App Store 이동을 측정하며, 방문 정보가 Google에 전송됩니다.',
+          '로그인 후 화면과 두 사람의 기록은 측정하지 않습니다. 아래 버튼에서 동의를 변경할 수 있습니다.',
+        ],
+      },
+      {
+        title: '6. 문의',
         body: [
           '개인정보와 관련된 문의는 앱 배포 페이지 또는 안내된 연락처로 문의해 주세요.',
         ],
@@ -148,6 +173,7 @@ const CONTENT: Record<Lang, {
     pageTitle: '隱私權政策 | Pairlog',
     title: '隱私權政策',
     intro: 'Pairlog 致力於安全地保存兩人的記錄。本頁面說明應用程式處理的資訊及其使用方式。',
+    analyticsSettings: '變更公開頁面分析設定',
     sections: [
       {
         title: '1. 收集的資訊',
@@ -178,7 +204,14 @@ const CONTENT: Record<Lang, {
         ],
       },
       {
-        title: '5. 聯絡方式',
+        title: '5. 公開頁面分析',
+        body: [
+          '僅在您同意後，我們才會在公開介紹頁面使用 Google Analytics 衡量頁面瀏覽和前往 App Store 的次數。瀏覽資訊會傳送給 Google。',
+          '登入後頁面及兩人的記錄不會被追蹤。您可以使用下方按鈕變更選擇。',
+        ],
+      },
+      {
+        title: '6. 聯絡方式',
         body: [
           '如有隱私相關問題，請透過應用程式發布頁面或已提供的聯絡資訊與我們聯繫。',
         ],
@@ -190,6 +223,7 @@ const CONTENT: Record<Lang, {
     pageTitle: '隐私政策 | Pairlog',
     title: '隐私政策',
     intro: 'Pairlog 致力于安全地保存两人的记录。本页面说明应用程序处理的信息及其使用方式。',
+    analyticsSettings: '更改公开页面分析设置',
     sections: [
       {
         title: '1. 收集的信息',
@@ -220,7 +254,14 @@ const CONTENT: Record<Lang, {
         ],
       },
       {
-        title: '5. 联系方式',
+        title: '5. 公开页面分析',
+        body: [
+          '仅在您同意后，我们才会在公开介绍页面使用 Google Analytics 衡量页面浏览和前往 App Store 的次数。浏览信息会发送给 Google。',
+          '登录后页面及两人的记录不会被追踪。您可以使用下方按钮更改选择。',
+        ],
+      },
+      {
+        title: '6. 联系方式',
         body: [
           '如有隐私相关问题，请通过应用程序发布页面或已提供的联系方式与我们联系。',
         ],
@@ -272,7 +313,6 @@ export default function PrivacyPage() {
             </button>
           ))}
         </div>
-
         <p className="mb-8 text-sm leading-7 text-[#6b5a68]">{c.intro}</p>
 
         <div className="space-y-5">
@@ -287,6 +327,13 @@ export default function PrivacyPage() {
             </section>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event('pairlog-analytics-settings'))}
+          className="mt-6 rounded-full border border-[#d45b8b] px-5 py-2 text-sm font-semibold text-[#d45b8b]"
+        >
+          {c.analyticsSettings}
+        </button>
       </div>
     </main>
   )

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 import { APP_STORE, SITE_URL } from '@/lib/marketing'
+import MarketingAnalytics from '@/components/marketing/MarketingAnalytics'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://pairlog.pages.dev'),
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           'featureList': ['ふたりの共有日記', '約束管理・リマインダー', 'ありがとうの記録とポイント', 'カレンダーで振り返り', 'ごほうびシステム'],
         }) }} />
         {children}
+        <MarketingAnalytics />
       </body>
     </html>
   )
