@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.pairlogapp",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSUserNotificationsUsageDescription": "We'll send reminders for your shared promises and notify you about your partner's records. / パートナーからの記録通知や、約束のリマインダーをお届けします。"
@@ -50,7 +51,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#fdf2f8"
       },
-      "package": "com.pairlogapp"
+      "package": "com.pairlogapp",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
@@ -63,7 +65,25 @@
         }
       ],
       "expo-sharing",
-      "expo-localization"
+      "expo-localization",
+      "@react-native-firebase/app",
+      [
+        "@react-native-firebase/analytics",
+        {
+          "ios": {
+            "withoutAdIdSupport": true
+          }
+        }
+      ],
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "dynamic"
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {},

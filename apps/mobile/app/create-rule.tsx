@@ -34,6 +34,7 @@ import {
   WEEKEND_INDICES,
 } from '../lib/rules'
 import { requestNotificationPermission, rescheduleAllReminders } from '../lib/notifications'
+import { trackAction } from '../lib/telemetry'
 import { t } from '../lib/i18n'
 import {
   decrementPointValue,
@@ -150,6 +151,7 @@ export default function CreateRuleScreen() {
         ? await createRule(coupleId, payload)
         : await createLocalRule(payload, userId)
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+      trackAction('rule_created', { scope: coupleId ? 'pair' : 'local' })
 
       if (reminderEnabled) {
         const allRules = coupleId

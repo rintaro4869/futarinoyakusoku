@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '../constants/colors'
 import { createCouple, joinCouple } from '../lib/api'
+import { trackAction } from '../lib/telemetry'
 import { useAuthStore } from '../lib/store'
 import { isInviteCodeReady } from '../lib/invite'
 import { getTutorialSeen, setInviteInfo, setPairingDeferred } from '../lib/storage'
@@ -97,6 +98,7 @@ export default function PairScreen() {
       await setPairingDeferred(false)
       await setInviteInfo(data.invite_code, data.invite_url)
       setCreatedCouple(data)
+      trackAction('pair_created')
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('common.error_network'))
     } finally {
@@ -147,6 +149,7 @@ export default function PairScreen() {
       const data = await joinCouple(inviteCode.trim().toUpperCase(), name.trim())
       await setCoupleId(data.couple_id)
       await setPairingDeferred(false)
+      trackAction('pair_joined')
       router.replace('/tutorial')
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('common.error_network'))

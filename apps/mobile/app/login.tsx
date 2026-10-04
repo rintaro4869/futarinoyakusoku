@@ -18,6 +18,7 @@ import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '../constants/colors'
 import { loginUser } from '../lib/api'
+import { trackAction } from '../lib/telemetry'
 import { useAuthStore } from '../lib/store'
 import { getTutorialSeen } from '../lib/storage'
 import { t } from '../lib/i18n'
@@ -44,6 +45,7 @@ export default function LoginScreen() {
       const data = await loginUser(email.trim(), password)
       await setAuth(data.device_token, data.user_id)
       await setCoupleId(data.couple_id ?? null)
+      trackAction('account_signed_in')
       if (data.couple_id) {
         const seen = await getTutorialSeen()
         router.replace(seen ? '/(home)' : '/tutorial')

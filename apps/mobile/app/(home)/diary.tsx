@@ -22,6 +22,7 @@ import { createDiaryEntry, DiaryEntry, Event, getDiaryEntries, getEvents, update
 import { getLocaleTag, t } from '../../lib/i18n'
 import { createLocalDiaryEntry, getLocalDiaryEntries, getLocalEvents, updateLocalDiaryEntry } from '../../lib/local-mode'
 import { useAuthStore } from '../../lib/store'
+import { trackAction } from '../../lib/telemetry'
 
 type TimelineItem =
   | { kind: 'diary'; data: DiaryEntry }
@@ -315,6 +316,7 @@ export default function DiaryScreen() {
         }
       }
       setShowModal(false)
+      if (!editingEntry) trackAction('diary_entry_created', { scope: coupleId ? 'pair' : 'local' })
       setDraftBody('')
       setEditingEntry(null)
       await load()

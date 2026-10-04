@@ -13,6 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import * as Haptics from 'expo-haptics'
 import { Colors } from '../constants/colors'
 import { createAnonymousUser } from '../lib/api'
+import { trackAction } from '../lib/telemetry'
 import { openPrivacyPolicy } from '../lib/legal'
 import { setPairingDeferred } from '../lib/storage'
 import { useAuthStore } from '../lib/store'
@@ -45,6 +46,7 @@ export default function OnboardingScreen() {
       const data = await createAnonymousUser()
       await setAuth(data.device_token, data.user_id)
       await setPairingDeferred(true)
+      trackAction('onboarding_completed')
       router.replace('/tutorial')
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('onboarding.start_error'))

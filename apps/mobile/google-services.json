@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "491096829061",
+    "project_id": "pairlog-ios",
+    "storage_bucket": "pairlog-ios.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491096829061:android:8ac475794efff82dd50dec",
+        "android_client_info": {
+          "package_name": "com.pairlogapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDulBe8qYDXQ0NM0zBOwgrwXrxRQPgYhuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

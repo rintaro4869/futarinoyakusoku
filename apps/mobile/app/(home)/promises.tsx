@@ -21,6 +21,7 @@ import { useAuthStore } from '../../lib/store'
 import { getLocalRules, createLocalEvent, archiveLocalRule } from '../../lib/local-mode'
 import { getRuleModeLabel, getRuleScheduleSummary, CATEGORY_I18N_KEY, RuleCategory } from '../../lib/rules'
 import { t } from '../../lib/i18n'
+import { trackAction } from '../../lib/telemetry'
 
 const DEBOUNCE_MS = 3000
 
@@ -109,6 +110,7 @@ export default function PromisesTab() {
       } else {
         await createLocalEvent(userId, rule.id)
       }
+      trackAction('rule_recorded', { scope: coupleId ? 'pair' : 'local' })
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       showSuccess(key, rule.mode === 'adhoc' ? t('promises.record_success_adhoc') : t('promises.record_success_routine'))
     } catch (e: any) {

@@ -57,11 +57,18 @@ const CONTENT: Record<Lang, {
         title: '5. 公開ページのアクセス解析',
         body: [
           '同意した場合に限り、公開案内ページでGoogle Analyticsを使い、ページ閲覧、セッションやApp Storeへの移動などの利用状況を計測します。Googleへ閲覧情報が送信されます。',
-          'ログイン後の画面やふたりの記録は計測対象に含めません。下のボタンから同意を変更できます。',
+          'Webサイトのログイン後画面やふたりの記録は計測対象に含めません。下のボタンから同意を変更できます。',
         ],
       },
       {
-        title: '6. お問い合わせ',
+        title: '6. アプリの利用状況と障害の計測',
+        body: [
+          'Firebaseを組み込んだアプリ版では、画面の利用、登録・ペア作成・記録の完了回数、クラッシュ情報、端末・OS情報などをGoogleのAnalyticsとCrashlyticsに送信します。',
+          'メールアドレス、ふたりの名前、約束や日記の内容、招待コードは計測イベントに含めません。',
+        ],
+      },
+      {
+        title: '7. お問い合わせ',
         body: [
           'プライバシーに関するお問い合わせは、アプリ配信ページまたは案内済みの連絡先からご連絡ください。',
         ],
@@ -107,11 +114,18 @@ const CONTENT: Record<Lang, {
         title: '5. Public-page Analytics',
         body: [
           'Only with your consent, we use Google Analytics on public information pages to measure activity such as page views, sessions, and visits to the App Store. Browsing information is sent to Google.',
-          'Signed-in screens and your shared records are excluded. You can change your choice using the button below.',
+          'Signed-in website screens and your shared records are excluded. You can change your choice using the button below.',
         ],
       },
       {
-        title: '6. Contact',
+        title: '6. App Usage and Crash Diagnostics',
+        body: [
+          'App versions with Firebase send screen usage, counts of completed registration, pairing and records, crash reports, and device and OS details to Google Analytics and Crashlytics.',
+          'Analytics events do not include email addresses, names, promise or diary contents, or invitation codes.',
+        ],
+      },
+      {
+        title: '7. Contact',
         body: [
           'For privacy-related inquiries, please contact us through the app\'s distribution page or the contact information provided.',
         ],
@@ -157,11 +171,18 @@ const CONTENT: Record<Lang, {
         title: '5. 공개 페이지 분석',
         body: [
           '동의한 경우에만 공개 안내 페이지에서 Google Analytics로 페이지 조회, 세션 및 App Store 이동 등의 이용 현황을 측정하며, 방문 정보가 Google에 전송됩니다.',
-          '로그인 후 화면과 두 사람의 기록은 측정하지 않습니다. 아래 버튼에서 동의를 변경할 수 있습니다.',
+          '웹사이트의 로그인 후 화면과 두 사람의 기록은 측정하지 않습니다. 아래 버튼에서 동의를 변경할 수 있습니다.',
         ],
       },
       {
-        title: '6. 문의',
+        title: '6. 앱 사용 및 오류 진단',
+        body: [
+          'Firebase가 포함된 앱 버전에서는 화면 이용, 가입·연결·기록 완료 횟수, 충돌 보고서, 기기 및 OS 정보를 Google Analytics와 Crashlytics로 전송합니다.',
+          '분석 이벤트에는 이메일 주소, 이름, 약속이나 일기 내용, 초대 코드가 포함되지 않습니다.',
+        ],
+      },
+      {
+        title: '7. 문의',
         body: [
           '개인정보와 관련된 문의는 앱 배포 페이지 또는 안내된 연락처로 문의해 주세요.',
         ],
@@ -207,11 +228,18 @@ const CONTENT: Record<Lang, {
         title: '5. 公開頁面分析',
         body: [
           '僅在您同意後，我們才會在公開介紹頁面使用 Google Analytics 衡量頁面瀏覽、工作階段及前往 App Store 等使用情況。瀏覽資訊會傳送給 Google。',
-          '登入後頁面及兩人的記錄不會被追蹤。您可以使用下方按鈕變更選擇。',
+          '網站的登入後頁面及兩人的記錄不會被追蹤。您可以使用下方按鈕變更選擇。',
         ],
       },
       {
-        title: '6. 聯絡方式',
+        title: '6. 應用程式使用及當機診斷',
+        body: [
+          '包含 Firebase 的應用程式版本會向 Google Analytics 和 Crashlytics 傳送畫面使用情況、註冊、配對與記錄完成次數、當機報告及裝置與作業系統資訊。',
+          '分析事件不包含電子郵件地址、姓名、約定或日記內容、邀請碼。',
+        ],
+      },
+      {
+        title: '7. 聯絡方式',
         body: [
           '如有隱私相關問題，請透過應用程式發布頁面或已提供的聯絡資訊與我們聯繫。',
         ],
@@ -257,11 +285,18 @@ const CONTENT: Record<Lang, {
         title: '5. 公开页面分析',
         body: [
           '仅在您同意后，我们才会在公开介绍页面使用 Google Analytics 衡量页面浏览、会话及前往 App Store 等使用情况。浏览信息会发送给 Google。',
-          '登录后页面及两人的记录不会被追踪。您可以使用下方按钮更改选择。',
+          '网站的登录后页面及两人的记录不会被追踪。您可以使用下方按钮更改选择。',
         ],
       },
       {
-        title: '6. 联系方式',
+        title: '6. 应用使用及崩溃诊断',
+        body: [
+          '包含 Firebase 的应用版本会向 Google Analytics 和 Crashlytics 发送页面使用情况、注册、配对与记录完成次数、崩溃报告以及设备和操作系统信息。',
+          '分析事件不包含电子邮件地址、姓名、约定或日记内容、邀请码。',
+        ],
+      },
+      {
+        title: '7. 联系方式',
         body: [
           '如有隐私相关问题，请通过应用程序发布页面或已提供的联系方式与我们联系。',
         ],

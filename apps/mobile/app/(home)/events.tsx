@@ -17,6 +17,7 @@ import { getRules, createEvent, archiveRule, Rule } from '../../lib/api'
 import { useAuthStore } from '../../lib/store'
 import { getRuleModeLabel } from '../../lib/rules'
 import { t } from '../../lib/i18n'
+import { trackAction } from '../../lib/telemetry'
 
 const DEBOUNCE_MS = 3000
 
@@ -151,6 +152,7 @@ export default function EventsScreen() {
 
     try {
       await createEvent(rule.id, {})
+      trackAction('rule_recorded', { scope: 'pair' })
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       const cta = getRuleCta(rule)
       showSuccess(key, cta.successMsg)

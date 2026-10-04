@@ -1,15 +1,21 @@
 import { useEffect } from 'react'
-import { Stack } from 'expo-router'
+import { Stack, usePathname } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { useAuthStore } from '../lib/store'
+import { trackScreen } from '../lib/telemetry'
 
 export default function RootLayout() {
   const hydrate = useAuthStore((s) => s.hydrate)
+  const pathname = usePathname()
 
   useEffect(() => {
     hydrate()
   }, [hydrate])
+
+  useEffect(() => {
+    if (pathname) trackScreen(pathname)
+  }, [pathname])
 
   return (
     <SafeAreaProvider>

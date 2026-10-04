@@ -17,6 +17,7 @@ import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '../constants/colors'
 import { registerUser } from '../lib/api'
+import { trackAction } from '../lib/telemetry'
 import { useAuthStore } from '../lib/store'
 import { t } from '../lib/i18n'
 
@@ -42,6 +43,7 @@ export default function RegisterScreen() {
     try {
       const data = await registerUser(email.trim(), password)
       await setAuth(data.device_token, data.user_id)
+      trackAction('account_registered')
       router.replace('/pair')
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('auth.register_failed'))
