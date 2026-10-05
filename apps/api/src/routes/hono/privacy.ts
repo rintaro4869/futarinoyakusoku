@@ -8,6 +8,70 @@ function uniqueIds(values: string[]) {
 }
 
 export function privacyRoutes(app: Hono<{ Variables: Variables }>) {
+  app.get('/users/:user_id/export', async (c) => {
+    const userId = c.get('userId')
+    if (userId !== c.req.param('user_id')) return c.json(makeError('FORBIDDEN'), 403)
+
+    const prisma = c.get('prisma')
+    const user = c.get('currentUser')
+    const memberships = await prisma.membership.findMany({
+      where: { userId, leftAt: null },
+      select: { coupleId: true, displayName: true, role: true, joinedAt: true },
+    })
+    const coupleIds = uniqueIds(memberships.map((membership) => membership.coupleId))
+
+    const [ownDiaryEntries, ownAnalyticsEvents] = await Promise.all([
+      prisma.diaryEntry.findMany({
+        where: { authorUserId: userId },
+        orderBy: { createdAt: 'asc' },
+        select: { id: true, coupleId: true, body: true, createdAt: true },
+      }),
+      prisma.analyticsEvent.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'asc' },
+        select: { eventName: true, payload: true, createdAt: true },
+      }),
+    ])
+
+    const couples: Record<string, unknown>[] = []
+    for (const coupleId of coupleIds) {
+      const rules = await prisma.rule.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } })
+      const ruleIds = rules.map((rule) => rule.id)
+      const [couple, diaryEntries, ruleEvents, occurrenceActions, pointLedger, repairActions, safetyActions] = await Promise.all([
+        prisma.couple.findUnique({ where: { id: coupleId }, select: { id: true, status: true, createdAt: true, closedAt: true } }),
+        prisma.diaryEntry.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } }),
+        prisma.ruleEvent.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } }),
+        ruleIds.length
+          ? prisma.ruleOccurrenceAction.findMany({ where: { ruleId: { in: ruleIds } }, orderBy: { createdAt: 'asc' } })
+          : Promise.resolve([]),
+        prisma.pointLedger.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } }),
+        prisma.repairAction.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } }),
+        prisma.safetyAction.findMany({ where: { coupleId }, orderBy: { createdAt: 'asc' } }),
+      ])
+      if (!couple) continue
+      couples.push({ couple, rules, diaryEntries, ruleEvents, occurrenceActions, pointLedger, repairActions, safetyActions })
+    }
+
+    c.header('Cache-Control', 'no-store')
+    c.header('Content-Disposition', 'attachment; filename="pairlog-export.json"')
+    return c.json({
+      format_version: 1,
+      exported_at: new Date().toISOString(),
+      scope: 'Own account and authored diary entries; shared records for couples with an active membership at export time.',
+      account: {
+        id: user.id,
+        email: user.email,
+        locale: user.locale,
+        timezone: user.timezone,
+        createdAt: user.createdAt,
+      },
+      memberships,
+      ownDiaryEntries,
+      ownAnalyticsEvents,
+      couples,
+    })
+  })
+
   app.delete('/users/:user_id/data', async (c) => {
     const userId = c.get('userId')
     const prisma = c.get('prisma')

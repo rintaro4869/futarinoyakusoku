@@ -12,11 +12,13 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import * as Haptics from 'expo-haptics'
+import { File, Paths } from 'expo-file-system'
+import * as Sharing from 'expo-sharing'
 import { Colors } from '../../constants/colors'
 import { TabRibbonHeader } from '../../components/TabRibbonHeader'
 import { ConnectionNoticeBar } from '../../components/ConnectionNoticeBar'
 import * as Clipboard from 'expo-clipboard'
-import { pauseCouple, unpauseCouple, leaveCouple, deleteUserData, getCoupleStatus } from '../../lib/api'
+import { pauseCouple, unpauseCouple, leaveCouple, deleteUserData, exportUserData, getCoupleStatus } from '../../lib/api'
 import { openPrivacyPolicy } from '../../lib/legal'
 import { useAuthStore } from '../../lib/store'
 import { clearInviteInfo, setPairingDeferred } from '../../lib/storage'
@@ -34,6 +36,7 @@ export default function SettingsScreen() {
   const [unpausing, setUnpausing] = useState(false)
   const [leaving, setLeaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [exporting, setExporting] = useState(false)
   const [paused, setPaused] = useState(false)
   const [statusLoading, setStatusLoading] = useState(true)
   const [inviteCode, setInviteCode] = useState<string | null>(null)
@@ -176,6 +179,27 @@ export default function SettingsScreen() {
     )
   }
 
+  async function handleExportData() {
+    if (!userId || exporting) return
+    setExporting(true)
+    let file: File | null = null
+    try {
+      if (!(await Sharing.isAvailableAsync())) {
+        throw new Error(t('settings.export_unavailable'))
+      }
+      const data = await exportUserData(userId)
+      file = new File(Paths.cache, `pairlog-export-${new Date().toISOString().replace(/[:.]/g, '-')}.json`)
+      file.create()
+      file.write(JSON.stringify(data, null, 2))
+      await Sharing.shareAsync(file.uri, { mimeType: 'application/json' })
+    } catch (e: any) {
+      Alert.alert(t('common.error'), e?.message ?? t('common.error_network'))
+    } finally {
+      try { file?.delete() } catch {}
+      setExporting(false)
+    }
+  }
+
   if (!hydrated) {
     return (
       <View style={styles.center}>
@@ -286,6 +310,21 @@ export default function SettingsScreen() {
 
         {/* Danger section */}
         <Text style={[styles.sectionTitle, { marginTop: 24 }]}>{t('settings.account_section')}</Text>
+
+        <TouchableOpacity
+          style={styles.card}
+          onPress={handleExportData}
+          disabled={exporting}
+          activeOpacity={0.85}
+        >
+          <View style={styles.dangerRow}>
+            <View>
+              <Text style={styles.logoutText}>{t('settings.export_title')}</Text>
+              <Text style={styles.guideDesc}>{t('settings.export_subtitle')}</Text>
+            </View>
+            {exporting ? <ActivityIndicator color={Colors.brand} size="small" /> : <Text style={styles.infoChevron}>›</Text>}
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.card}
