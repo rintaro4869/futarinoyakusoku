@@ -29,6 +29,7 @@ export type Env = {
   WEB_URL: string
   APP_URL: string
   MAINTENANCE_MODE?: string
+  SIGNUPS_CLOSED?: string
   RESEND_API_KEY?: string
   RESET_EMAIL_FROM?: string
   RESET_EMAIL_REPLY_TO?: string
@@ -123,6 +124,11 @@ export function createApp(
   // Best-effort auth rate limiting for public auth endpoints.
   app.use('/api/v1/auth/*', async (c, next) => {
     const path = new URL(c.req.url).pathname
+    const workerEnv = c.env as Env | undefined
+    const signupsClosed = workerEnv?.SIGNUPS_CLOSED ?? devEnv?.SIGNUPS_CLOSED
+    if (signupsClosed === 'true' && ['/api/v1/auth/anonymous', '/api/v1/auth/register'].includes(path)) {
+      return c.json({ code: 'SIGNUPS_CLOSED', message: 'Pairlogはサービス終了準備中のため、新規登録を停止しました。' }, 410)
+    }
     const { blocked, retryAfterSeconds } = checkAuthRateLimit(path, getClientKey(c.req.raw.headers))
     if (blocked) {
       c.header('Retry-After', String(retryAfterSeconds))

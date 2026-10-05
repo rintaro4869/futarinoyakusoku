@@ -84,6 +84,9 @@ importers:
       expo-clipboard:
         specifier: ~55.0.9
         version: 55.0.13(expo@55.0.15)(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      expo-file-system:
+        specifier: ~55.0.16
+        version: 55.0.16(expo@55.0.15)(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       expo-haptics:
         specifier: ~55.0.9
         version: 55.0.14(expo@55.0.15)
