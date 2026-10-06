@@ -272,11 +272,22 @@ export function authRoutes(app: Hono<{ Variables: Variables }>) {
       return c.json(makeError('INVALID_RESET_CODE'), 400)
     }
 
-    // トークンを使用済みにする
-    await prisma.passwordResetToken.update({
-      where: { id: token.id },
-      data: { usedAt: new Date() },
+    // 検索後の競合や失効も確認し、未使用トークンを一度だけ消費する
+    const consumedAt = new Date()
+    const consumed = await prisma.passwordResetToken.updateMany({
+      where: {
+        id: token.id,
+        userId: user.id,
+        code: body.code,
+        usedAt: null,
+        expiresAt: { gt: consumedAt },
+      },
+      data: { usedAt: consumedAt },
     })
+
+    if (consumed.count !== 1) {
+      return c.json(makeError('INVALID_RESET_CODE'), 400)
+    }
 
     // パスワードを更新
     const passwordHash = await hashPassword(body.new_password)

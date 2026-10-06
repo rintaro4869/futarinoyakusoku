@@ -23,6 +23,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.9.4
         version: 0.9.5
+      '@prisma/adapter-d1':
+        specifier: 5.22.0
+        version: 5.22.0
       '@prisma/adapter-neon':
         specifier: ^5.14.0
         version: 5.22.0(@neondatabase/serverless@0.9.5)
