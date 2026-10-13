@@ -219,6 +219,10 @@ export async function unpauseCouple(coupleId: string) {
 }
 
 // Privacy
+export async function exportUserData(userId: string): Promise<Record<string, unknown>> {
+  return apiFetch<Record<string, unknown>>(`/users/${userId}/export`)
+}
+
 export async function deleteUserData(userId: string) {
   return apiFetch<void>(`/users/${userId}/data`, { method: 'DELETE' })
 }

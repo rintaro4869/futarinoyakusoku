@@ -419,6 +419,9 @@ export const ja = {
     unpause_success_message: '記録を再開しました。',
     // アカウント
     account_section: 'アカウント',
+    export_title: '記録を書き出す',
+    export_subtitle: '自分の記録と現在のペアの共有記録をJSONで保存',
+    export_unavailable: 'この端末ではファイル共有を利用できません。',
     logout: 'ログアウト',
     logout_confirm: 'ログアウトしますか？',
     leave_title: 'ペアを解除する',
